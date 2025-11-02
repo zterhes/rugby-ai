@@ -1,7 +1,7 @@
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { env } from "@/env";
-import { teamExtractionTool } from "@/tools/team-extraction";
+import { rosterImageGeneratorTool } from "@/tools/roster-image-generation";
 import { RUGBY_AI_SYSTEM_PROMPT } from "@/lib/promts/system-prompts";
 
 export const maxDuration = 30;
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     messages: convertToModelMessages(messages),
     system: RUGBY_AI_SYSTEM_PROMPT,
     tools: {
-      teamExtraction: teamExtractionTool,
+      rosterImageGenerator: rosterImageGeneratorTool,
     },
   });
 

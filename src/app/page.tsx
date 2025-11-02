@@ -28,6 +28,7 @@ import {
   PromptInputFooter,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
+import Image from "next/image";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import { Fragment, useState } from "react";
 import { useChat } from "@ai-sdk/react";
@@ -45,6 +46,8 @@ import {
   ReasoningTrigger,
 } from "@/components/ai-elements/reasoning";
 import { Loader } from "@/components/ai-elements/loader";
+import { ApiTemplateIoResponse } from "@/lib/schemas";
+import { ImageViewer } from "@/components/image-viewer";
 
 const models = [
   {
@@ -56,7 +59,6 @@ const models = [
 const ChatBotDemo = () => {
   const [input, setInput] = useState("");
   const [model, setModel] = useState<string>(models[0].value);
-  const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, regenerate } = useChat();
 
   const handleSubmit = (message: PromptInputMessage) => {
@@ -106,6 +108,7 @@ const ChatBotDemo = () => {
                     </Sources>
                   )}
                 {message.parts.map((part, i) => {
+                  console.log("part", part);
                   switch (part.type) {
                     case "text":
                       return (
@@ -151,6 +154,25 @@ const ChatBotDemo = () => {
                           <ReasoningContent>{part.text}</ReasoningContent>
                         </Reasoning>
                       );
+                    case "tool-rosterImageGenerator":
+                      console.log("part", part);
+                      const output = part.output as ApiTemplateIoResponse;
+                      if (!output || !output.download_url_png) {
+                        return null;
+                      }
+                      return (
+                        <Fragment key={`${message.id}-${i}`}>
+                          <Message from={message.role}>
+                            <MessageContent>
+                              <Response>Ez lesz a kep</Response>
+                              <ImageViewer
+                                src={output.download_url_png}
+                                alt="Roster Image"
+                              />
+                            </MessageContent>
+                          </Message>
+                        </Fragment>
+                      );
                     default:
                       return null;
                   }
@@ -189,7 +211,6 @@ const ChatBotDemo = () => {
               </PromptInputActionMenu>
               <PromptInputButton
                 onClick={() => {
-                  setInput("Generate team picture");
                   sendMessage({
                     text: "Generate team picture",
                     files: [],
