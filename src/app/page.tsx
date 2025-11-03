@@ -48,6 +48,8 @@ import {
 import { Loader } from "@/components/ai-elements/loader";
 import { ApiTemplateIoResponse } from "@/lib/schemas";
 import { ImageViewer } from "@/components/image-viewer";
+import logo from "@/assets/szines_logo.png";
+import { cn } from "@/lib/utils";
 
 const models = [
   {
@@ -77,8 +79,29 @@ const ChatBotDemo = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
+    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen bg-gradient-to-br from-gradient-start via-gradient-mid to-gradient-end">
       <div className="flex flex-col h-full">
+        <header className="mb-8 animate-fade-in">
+          <div className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-3xl p-6 shadow-lg">
+            <div className="flex items-center gap-4">
+              <Image
+                src={logo.src}
+                alt="Honcharosun Gorillak Rugby Club"
+                className="h-16 w-16 object-contain drop-shadow-lg"
+                width={64}
+                height={64}
+              />
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">
+                  AI Agentic Assistant
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Manage your team with ease
+                </p>
+              </div>
+            </div>
+          </div>
+        </header>
         <Conversation className="h-full">
           <ConversationContent>
             {messages.map((message) => (
@@ -114,8 +137,19 @@ const ChatBotDemo = () => {
                       return (
                         <Fragment key={`${message.id}-${i}`}>
                           <Message from={message.role}>
-                            <MessageContent>
-                              <Response>{part.text}</Response>
+                            <MessageContent
+                              className={cn(
+                                "max-w-[80%] rounded-2xl px-6 py-4 backdrop-blur-xl border transition-all duration-300",
+                                "shadow-lg hover:shadow-xl",
+                                message.role === "user"
+                                  ? "bg-primary/10 border-primary/20 text-foreground ml-auto"
+                                  : "bg-card/40 border-border/50 text-foreground"
+                              )}
+                              style={{
+                                backdropFilter: "blur(20px)",
+                              }}
+                            >
+                              <Response className="">{part.text}</Response>
                             </MessageContent>
                           </Message>
                           {message.role === "assistant" &&
@@ -163,7 +197,18 @@ const ChatBotDemo = () => {
                       return (
                         <Fragment key={`${message.id}-${i}`}>
                           <Message from={message.role}>
-                            <MessageContent>
+                            <MessageContent
+                              className={cn(
+                                "max-w-[80%] rounded-2xl px-6 py-4 backdrop-blur-xl border transition-all duration-300",
+                                "shadow-lg hover:shadow-xl",
+                                message.role === "user"
+                                  ? "bg-primary/10 border-primary/20 text-foreground ml-auto"
+                                  : "bg-card/40 border-border/50 text-foreground"
+                              )}
+                              style={{
+                                backdropFilter: "blur(20px)",
+                              }}
+                            >
                               <Response>Ez lesz a kep</Response>
                               <ImageViewer
                                 src={output.download_url_png}
@@ -186,7 +231,7 @@ const ChatBotDemo = () => {
 
         <PromptInput
           onSubmit={handleSubmit}
-          className="mt-4"
+          className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-3xl p-4 shadow-lg mt-4"
           globalDrop
           multiple
         >
@@ -197,6 +242,7 @@ const ChatBotDemo = () => {
           </PromptInputHeader>
           <PromptInputBody>
             <PromptInputTextarea
+              className="min-h-[60px] max-h-[200px] resize-none bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground placeholder:text-muted-foreground"
               onChange={(e) => setInput(e.target.value)}
               value={input}
             />
@@ -241,7 +287,11 @@ const ChatBotDemo = () => {
                 </PromptInputModelSelectContent>
               </PromptInputModelSelect>
             </PromptInputTools>
-            <PromptInputSubmit disabled={!input && !status} status={status} />
+            <PromptInputSubmit
+              className="h-12 w-12 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              disabled={!input && !status}
+              status={status}
+            />
           </PromptInputFooter>
         </PromptInput>
       </div>
