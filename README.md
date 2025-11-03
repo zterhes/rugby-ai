@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rugby AI
+
+An AI-powered rugby team management application built with Next.js and Google AI.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js (v20 or later)
+- pnpm (recommended) or npm
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd rugby-ai
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Configure environment variables**
 
-## Learn More
+Create a `.env.local` file in the root directory with the following variables:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+GOOGLE_AI_API_KEY=your_google_ai_api_key
+TEAM_NAME=your_team_name
+API_TEMPLATE_IO_URL=your_api_template_io_url
+API_TEMPLATE_IO_API_KEY=your_api_template_io_key
+API_TEMPLATE_IO_ROSTER_STORY_ID=your_roster_story_id
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Required environment variables:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `GOOGLE_AI_API_KEY` - API key for Google AI services
+- `TEAM_NAME` - Your rugby team name
+- `API_TEMPLATE_IO_URL` - URL for API Template IO service
+- `API_TEMPLATE_IO_API_KEY` - API key for template generation
+- `API_TEMPLATE_IO_ROSTER_STORY_ID` - Template ID for roster images
 
-## Deploy on Vercel
+4. **Start the development server**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. **Open the application**
+
+Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Features
+
+- AI-powered chat interface for rugby team management
+- Roster image generation
+- Real-time AI responses with streaming
+- Modern UI with Radix UI components
+
+## Tech Stack
+
+- **Framework:** Next.js 16
+- **AI:** Google AI SDK, Vercel AI SDK
+- **UI:** React 19, Radix UI, Tailwind CSS
+- **Language:** TypeScript
+
+## Project Structure
+
+```
+rugby-ai/
+├── src/
+│   ├── app/          # Next.js app directory
+│   ├── components/   # React components
+│   ├── tools/        # AI tools and clients
+│   └── lib/          # Utilities and prompts
+└── public/           # Static assets
+```
+
+## Available Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
