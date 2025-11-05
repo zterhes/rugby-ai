@@ -33,7 +33,7 @@ import { Action, Actions } from "@/components/ai-elements/actions";
 import { Fragment, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { Response } from "@/components/ai-elements/response";
-import { CopyIcon, GlobeIcon, ImageIcon, RefreshCcwIcon } from "lucide-react";
+import { CopyIcon, ImageIcon, RefreshCcwIcon } from "lucide-react";
 import {
   Source,
   Sources,
