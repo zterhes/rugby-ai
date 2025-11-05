@@ -131,7 +131,6 @@ const ChatBotDemo = () => {
                     </Sources>
                   )}
                 {message.parts.map((part, i) => {
-                  console.log("part", part);
                   switch (part.type) {
                     case "text":
                       return (
@@ -189,7 +188,6 @@ const ChatBotDemo = () => {
                         </Reasoning>
                       );
                     case "tool-rosterImageGenerator":
-                      console.log("part", part);
                       const output = part.output as ApiTemplateIoResponse;
                       if (!output || !output.download_url_png) {
                         return null;

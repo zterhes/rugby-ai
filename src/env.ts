@@ -10,6 +10,6 @@ const envSchema = z.object({
 
 const env = envSchema.parse(process.env);
 
-console.log(env);
+console.log("process.env", process.env);
 
 export { env };
