@@ -50,6 +50,7 @@ import { ApiTemplateIoResponse } from "@/lib/schemas";
 import { ImageViewer } from "@/components/image-viewer";
 import logo from "@/assets/szines_logo.png";
 import { cn } from "@/lib/utils";
+import { UserButton } from "@clerk/nextjs";
 
 const models = [
   {
@@ -82,7 +83,7 @@ const ChatBotDemo = () => {
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen bg-gradient-to-br from-gradient-start via-gradient-mid to-gradient-end">
       <div className="flex flex-col h-full">
         <header className="mb-8 animate-fade-in">
-          <div className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-3xl p-6 shadow-lg">
+          <div className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-3xl p-6 shadow-lg flex justify-between items-center">
             <div className="flex items-center gap-4">
               <Image
                 src={logo.src}
@@ -100,6 +101,23 @@ const ChatBotDemo = () => {
                 </p>
               </div>
             </div>
+            <UserButton
+              showName
+              appearance={{
+                variables: {
+                  colorPrimary: "hsl(var(--primary))",
+                  colorForeground: "hsl(var(--foreground))",
+                  colorBackground: "hsl(var(--background))",
+                  colorText: "hsl(var(--foreground))",
+                },
+                elements: {
+                  userButtonPopoverCard: {
+                    background: "hsl(var(--background))",
+                    color: "hsl(var(--foreground))",
+                  },
+                },
+              }}
+            />
           </div>
         </header>
         <Conversation className="h-full">

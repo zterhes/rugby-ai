@@ -12,6 +12,7 @@
     "@ai-sdk/google": "^2.0.26",
     "@ai-sdk/openai": "^2.0.59",
     "@ai-sdk/react": "^2.0.86",
+    "@clerk/nextjs": "^6.34.3",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.15",
