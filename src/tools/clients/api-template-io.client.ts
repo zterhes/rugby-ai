@@ -17,8 +17,6 @@ const apiTemplateIoClient = axios.create({
 export const generateRosterStory = async (
   requestBody: z.infer<typeof apiTemplateIoRequestBodySchema>
 ) => {
-  console.log("requestBody", requestBody);
-  console.log("apiTemplateIoClient", apiTemplateIoClient);
   const response = await apiTemplateIoClient.post(
     "/create-image",
     requestBody,
@@ -28,9 +26,12 @@ export const generateRosterStory = async (
       },
     }
   );
-  console.log("response", response);
   if (response.status !== 200) {
     throw new Error(`Failed to generate roster story: ${response.statusText}`);
   }
-  return apiTemplateIoResponseSchema.parse(response.data);
+  const result = apiTemplateIoResponseSchema.safeParse(response.data);
+  if (!result.success) {
+    throw new Error(`Failed to generate roster story: ${result.error.message}`);
+  }
+  return result.data;
 };

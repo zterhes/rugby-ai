@@ -207,9 +207,6 @@ const ChatBotDemo = () => {
                       );
                     case "tool-rosterImageGenerator":
                       const output = part.output as ApiTemplateIoResponse;
-                      if (!output || !output.download_url_png) {
-                        return null;
-                      }
                       return (
                         <Fragment key={`${message.id}-${i}`}>
                           <Message from={message.role}>
@@ -225,11 +222,16 @@ const ChatBotDemo = () => {
                                 backdropFilter: "blur(20px)",
                               }}
                             >
-                              <Response>Ez lesz a kep</Response>
-                              <ImageViewer
-                                src={output.download_url_png}
-                                alt="Roster Image"
-                              />
+                              {part.state === "output-available" &&
+                                output.download_url_png && (
+                                  <ImageViewer
+                                    src={output.download_url_png}
+                                    alt="Roster Image"
+                                  />
+                                )}
+                              {part.state === "output-error" && (
+                                <Response>{part.state}</Response>
+                              )}
                             </MessageContent>
                           </Message>
                         </Fragment>

@@ -24,11 +24,44 @@ export const rosterImageGeneratorTool = tool({
         })
       );
     });
+    if (overrides.length < 23) {
+      for (let i = overrides.length; i < 23; i++) {
+        overrides.push(
+          apiTemplateIoOverrideSchema.parse({
+            name: `jersey_number_${i + 1}`,
+            text: ``,
+          })
+        );
+        overrides.push(
+          apiTemplateIoOverrideSchema.parse({
+            name: `fullName_${i + 1}`,
+            text: ``,
+          })
+        );
+      }
+    }
+    overrides.push(
+      apiTemplateIoOverrideSchema.parse({
+        name: `location`,
+        text: input.location,
+      })
+    );
+    overrides.push(
+      apiTemplateIoOverrideSchema.parse({
+        name: `date`,
+        text: input.date,
+      })
+    );
+    overrides.push(
+      apiTemplateIoOverrideSchema.parse({
+        name: `time`,
+        text: input.time,
+      })
+    );
     const requestBody = apiTemplateIoRequestBodySchema.parse({
       overrides,
     });
     const response = await generateRosterStory(requestBody);
-    console.log(response);
     return response;
   },
 });

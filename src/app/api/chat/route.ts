@@ -26,8 +26,6 @@ export async function POST(req: Request) {
     },
   });
 
-  console.log("result", result);
-
   return result.toUIMessageStreamResponse({
     sendSources: true,
     sendReasoning: true,
