@@ -17,15 +17,6 @@ const apiTemplateIoClient = axios.create({
 export const generateRosterStory = async (
   requestBody: z.infer<typeof apiTemplateIoRequestBodySchema>
 ) => {
-  console.log("env.API_TEMPLATE_IO_URL", env.API_TEMPLATE_IO_URL);
-  console.log(
-    "env.API_TEMPLATE_IO_ROSTER_STORY_ID",
-    env.API_TEMPLATE_IO_ROSTER_STORY_ID
-  );
-  console.log("env.API_TEMPLATE_IO_API_KEY", env.API_TEMPLATE_IO_API_KEY);
-  console.log("requestBody", requestBody);
-  console.log("url", apiTemplateIoClient.getUri());
-  console.log("api-key", apiTemplateIoClient.defaults.headers["x-api-key"]);
   const response = await apiTemplateIoClient.post(
     "/create-image",
     requestBody,
