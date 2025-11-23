@@ -80,7 +80,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen bg-gradient-to-br from-gradient-start via-gradient-mid to-gradient-end">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6 relative size-full h-screen bg-gradient-to-br from-gradient-start via-gradient-mid to-gradient-end">
       <div className="flex flex-col h-full">
         <Header />
         <Conversation className="h-full">
@@ -119,7 +119,7 @@ const ChatBot = () => {
                           <Message from={message.role}>
                             <MessageContent
                               className={cn(
-                                "max-w-[80%] rounded-2xl px-6 py-4 backdrop-blur-xl border transition-all duration-300",
+                                "max-w-[90%] sm:max-w-[85%] md:max-w-[80%] rounded-2xl px-3 sm:px-4 md:px-6 py-3 sm:py-4 backdrop-blur-xl border transition-all duration-300",
                                 "shadow-lg hover:shadow-xl",
                                 message.role === "user"
                                   ? "bg-primary/10 border-primary/20 text-foreground ml-auto"
@@ -175,7 +175,7 @@ const ChatBot = () => {
                           <Message from={message.role}>
                             <MessageContent
                               className={cn(
-                                "max-w-[80%] rounded-2xl px-6 py-4 backdrop-blur-xl border transition-all duration-300",
+                                "max-w-[90%] sm:max-w-[85%] md:max-w-[80%] rounded-2xl px-3 sm:px-4 md:px-6 py-3 sm:py-4 backdrop-blur-xl border transition-all duration-300",
                                 "shadow-lg hover:shadow-xl",
                                 message.role === "user"
                                   ? "bg-primary/10 border-primary/20 text-foreground ml-auto"
@@ -212,7 +212,7 @@ const ChatBot = () => {
 
         <PromptInput
           onSubmit={handleSubmit}
-          className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-3xl p-4 shadow-lg mt-4"
+          className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-lg mt-3 sm:mt-4"
           globalDrop
           multiple
         >
@@ -249,7 +249,9 @@ const ChatBot = () => {
                 }}
               >
                 <ImageIcon size={16} />
-                <span>{t.chat.generateTeamPicture}</span>
+                <span className="hidden sm:inline">
+                  {t.chat.generateTeamPicture}
+                </span>
               </PromptInputButton>
               <PromptInputModelSelect
                 onValueChange={(value) => {
@@ -273,7 +275,7 @@ const ChatBot = () => {
               </PromptInputModelSelect>
             </PromptInputTools>
             <PromptInputSubmit
-              className="h-12 w-12 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
               disabled={!input && !status}
               status={status}
             />
