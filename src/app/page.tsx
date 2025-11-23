@@ -51,6 +51,8 @@ import { ImageViewer } from "@/components/image-viewer";
 import logo from "@/assets/szines_logo.png";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@clerk/nextjs";
+import { LanguageProvider, useLanguage } from "@/i18n/LanguageContext";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const models = [
   {
@@ -59,10 +61,11 @@ const models = [
   },
 ];
 
-const ChatBotDemo = () => {
+const ChatBot = () => {
   const [input, setInput] = useState("");
   const [model, setModel] = useState<string>(models[0].value);
   const { messages, sendMessage, status, regenerate } = useChat();
+  const { t } = useLanguage();
 
   const handleSubmit = (message: PromptInputMessage) => {
     const hasText = Boolean(message.text);
@@ -94,30 +97,33 @@ const ChatBotDemo = () => {
               />
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
-                  AI Agentic Assistant
+                  {t.header.title}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Manage your team with ease
+                  {t.header.subtitle}
                 </p>
               </div>
             </div>
-            <UserButton
-              showName
-              appearance={{
-                variables: {
-                  colorPrimary: "hsl(var(--primary))",
-                  colorForeground: "hsl(var(--foreground))",
-                  colorBackground: "hsl(var(--background))",
-                  colorText: "hsl(var(--foreground))",
-                },
-                elements: {
-                  userButtonPopoverCard: {
-                    background: "hsl(var(--background))",
-                    color: "hsl(var(--foreground))",
+            <div className="flex items-center gap-4">
+              <LanguageSelector />
+              <UserButton
+                showName
+                appearance={{
+                  variables: {
+                    colorPrimary: "hsl(var(--primary))",
+                    colorForeground: "hsl(var(--foreground))",
+                    colorBackground: "hsl(var(--background))",
+                    colorText: "hsl(var(--foreground))",
                   },
-                },
-              }}
-            />
+                  elements: {
+                    userButtonPopoverCard: {
+                      background: "hsl(var(--background))",
+                      color: "hsl(var(--foreground))",
+                    },
+                  },
+                }}
+              />
+            </div>
           </div>
         </header>
         <Conversation className="h-full">
@@ -261,6 +267,7 @@ const ChatBotDemo = () => {
           <PromptInputBody>
             <PromptInputTextarea
               className="min-h-[60px] max-h-[200px] resize-none bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-foreground placeholder:text-muted-foreground"
+              placeholder={t.chat.placeholder}
               onChange={(e) => setInput(e.target.value)}
               value={input}
             />
@@ -270,7 +277,10 @@ const ChatBotDemo = () => {
               <PromptInputActionMenu>
                 <PromptInputActionMenuTrigger />
                 <PromptInputActionMenuContent>
-                  <PromptInputActionAddAttachments />
+                  <PromptInputActionAddAttachments
+                    label={t.chat.addAttachmentsOrFiles}
+                    className="bg-black/20"
+                  />
                 </PromptInputActionMenuContent>
               </PromptInputActionMenu>
               <PromptInputButton
@@ -282,7 +292,7 @@ const ChatBotDemo = () => {
                 }}
               >
                 <ImageIcon size={16} />
-                <span>Generate Team Picture</span>
+                <span>{t.chat.generateTeamPicture}</span>
               </PromptInputButton>
               <PromptInputModelSelect
                 onValueChange={(value) => {
@@ -317,4 +327,12 @@ const ChatBotDemo = () => {
   );
 };
 
-export default ChatBotDemo;
+const ChatBotDemoWrapper = () => {
+  return (
+    <LanguageProvider>
+      <ChatBot />
+    </LanguageProvider>
+  );
+};
+
+export default ChatBotDemoWrapper;
