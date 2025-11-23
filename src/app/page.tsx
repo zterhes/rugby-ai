@@ -28,7 +28,6 @@ import {
   PromptInputFooter,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
-import Image from "next/image";
 import { Action, Actions } from "@/components/ai-elements/actions";
 import { Fragment, useState } from "react";
 import { useChat } from "@ai-sdk/react";
@@ -48,11 +47,9 @@ import {
 import { Loader } from "@/components/ai-elements/loader";
 import { ApiTemplateIoResponse } from "@/lib/schemas";
 import { ImageViewer } from "@/components/image-viewer";
-import logo from "@/assets/szines_logo.png";
 import { cn } from "@/lib/utils";
-import { UserButton } from "@clerk/nextjs";
 import { LanguageProvider, useLanguage } from "@/i18n/LanguageContext";
-import { LanguageSelector } from "@/components/LanguageSelector";
+import { Header } from "@/components/Header";
 
 const models = [
   {
@@ -85,47 +82,7 @@ const ChatBot = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen bg-gradient-to-br from-gradient-start via-gradient-mid to-gradient-end">
       <div className="flex flex-col h-full">
-        <header className="mb-8 animate-fade-in">
-          <div className="backdrop-blur-xl bg-card/40 border border-border/50 rounded-3xl p-6 shadow-lg flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <Image
-                src={logo.src}
-                alt="Honcharosun Gorillak Rugby Club"
-                className="h-16 w-16 object-contain drop-shadow-lg"
-                width={64}
-                height={64}
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  {t.header.title}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t.header.subtitle}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <LanguageSelector />
-              <UserButton
-                showName
-                appearance={{
-                  variables: {
-                    colorPrimary: "hsl(var(--primary))",
-                    colorForeground: "hsl(var(--foreground))",
-                    colorBackground: "hsl(var(--background))",
-                    colorText: "hsl(var(--foreground))",
-                  },
-                  elements: {
-                    userButtonPopoverCard: {
-                      background: "hsl(var(--background))",
-                      color: "hsl(var(--foreground))",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-        </header>
+        <Header />
         <Conversation className="h-full">
           <ConversationContent>
             {messages.map((message) => (
@@ -286,7 +243,7 @@ const ChatBot = () => {
               <PromptInputButton
                 onClick={() => {
                   sendMessage({
-                    text: "Generate team picture",
+                    text: t.chat.generateTeamPicture,
                     files: [],
                   });
                 }}
@@ -327,12 +284,4 @@ const ChatBot = () => {
   );
 };
 
-const ChatBotDemoWrapper = () => {
-  return (
-    <LanguageProvider>
-      <ChatBot />
-    </LanguageProvider>
-  );
-};
-
-export default ChatBotDemoWrapper;
+export default ChatBot;
