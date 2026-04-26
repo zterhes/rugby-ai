@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const envSchema = z.object({
+const serverEnvSchema = z.object({
   GOOGLE_AI_API_KEY: z.string(),
   TEAM_NAME: z.string(),
   BLOB_READ_WRITE_TOKEN: z.string(),
 });
 
-const env = envSchema.parse({
+const serverEnv = serverEnvSchema.parse({
   ...process.env,
 });
 
-export { env };
+export { serverEnv };

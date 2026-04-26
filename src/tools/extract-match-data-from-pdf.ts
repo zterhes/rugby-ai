@@ -1,6 +1,6 @@
 import { tool, generateObject } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { env } from "@/env";
+import { serverEnv } from "@/env";
 import { EXTRACT_MATCH_DATA_FROM_PDF_TOOL_PROMPT } from "@/lib/promts/tool-promts";
 import {
   extractMatchDataInputSchema,
@@ -8,7 +8,9 @@ import {
   ExtractMatchDataOutput,
 } from "@/lib/schemas";
 
-const normalizeExtracted = (data: ExtractMatchDataOutput): ExtractMatchDataOutput => {
+const normalizeExtracted = (
+  data: ExtractMatchDataOutput,
+): ExtractMatchDataOutput => {
   const players = (data.players || []).map((player) => ({
     firstName: player.firstName.trim(),
     lastName: player.lastName.trim(),
@@ -34,13 +36,13 @@ export const extractMatchDataFromPdfTool = tool({
   outputSchema: extractMatchDataOutputSchema,
   execute: async ({ flow, sourceText }) => {
     const google = createGoogleGenerativeAI({
-      apiKey: env.GOOGLE_AI_API_KEY,
+      apiKey: serverEnv.GOOGLE_AI_API_KEY,
     });
 
     const extractionPrompt = `
 Extract structured rugby match data from the following text.
 Flow: ${flow}
-Default team to prioritize: ${env.TEAM_NAME}
+Default team to prioritize: ${serverEnv.TEAM_NAME}
 
 Rules:
 - Return players only for lineup flows.

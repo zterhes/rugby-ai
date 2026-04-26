@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MaterialIcon } from "./material-icon";
+import { MdCall, MdEdit, MdMail, MdVisibility } from "react-icons/md";
 import type { Player } from "@/lib/data/players";
 
 type PlayerCardProps = {
@@ -96,7 +96,7 @@ export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
           href={`mailto:${player.email}`}
           className="flex items-center gap-2 text-muted-foreground transition-colors group-hover:text-on-surface-variant"
         >
-          <MaterialIcon name="mail" size={16} />
+          <MdMail size={16} className="shrink-0" aria-hidden />
           <span className="truncate font-subtitle-xs text-subtitle-xs">
             {player.email}
           </span>
@@ -105,7 +105,7 @@ export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
           href={`tel:${player.phone.replace(/\s+/g, "")}`}
           className="flex items-center gap-2 text-muted-foreground transition-colors group-hover:text-on-surface-variant"
         >
-          <MaterialIcon name="call" size={16} />
+          <MdCall size={16} className="shrink-0" aria-hidden />
           <span className="font-subtitle-xs text-subtitle-xs">
             {player.phone}
           </span>
@@ -119,7 +119,7 @@ export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
           onClick={() => onView?.(player)}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-glass-border/50 bg-transparent py-2 font-label text-label text-on-background transition-all hover:border-glass-border hover:bg-surface-elevated"
         >
-          <MaterialIcon name="visibility" size={16} />
+          <MdVisibility size={16} className="shrink-0" aria-hidden />
           Profile
         </button>
         <button
@@ -127,7 +127,7 @@ export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
           onClick={() => onEdit?.(player)}
           className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-glass-border/50 bg-transparent py-2 font-label text-label text-on-background transition-all hover:border-glass-border hover:bg-surface-elevated"
         >
-          <MaterialIcon name="edit" size={16} />
+          <MdEdit size={16} className="shrink-0" aria-hidden />
           Edit
         </button>
       </div>

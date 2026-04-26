@@ -1,10 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MaterialIcon } from "@/components/scrum/material-icon";
+import { MdAdd, MdSearch, MdSearchOff } from "react-icons/md";
 import { PlayerCard } from "@/components/scrum/player-card";
-import { SideNav } from "@/components/scrum/side-nav";
-import { TopBar } from "@/components/scrum/top-bar";
 import {
   PLAYERS,
   type DuesStatus,
@@ -88,9 +86,6 @@ export default function RosterPage() {
       {/* Ambient background gradient */}
       <div className="pointer-events-none fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface-variant/30 via-background to-background" />
 
-      <TopBar />
-      <SideNav />
-
       <main className="md:ml-64 pt-24 pb-12 px-4 md:px-page-padding max-w-[1440px] mx-auto min-h-screen flex flex-col gap-8">
         {/* Page Header & Controls */}
         <section className="flex flex-col md:flex-row md:items-end justify-between gap-stack border-b border-glass-border/30 pb-6">
@@ -106,10 +101,10 @@ export default function RosterPage() {
           <div className="flex flex-wrap items-center gap-3">
             {/* Search */}
             <div className="relative group">
-              <MaterialIcon
-                name="search"
+              <MdSearch
                 size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary-container"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary-container"
+                aria-hidden
               />
               <input
                 type="text"
@@ -164,10 +159,10 @@ export default function RosterPage() {
               aria-label="Add new player"
               className="group ml-auto md:ml-2 w-12 h-12 rounded-full bg-primary-container hover:bg-[#b91c1c] text-on-primary-container shadow-[0_4px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_6px_25px_rgba(220,38,38,0.4)] flex items-center justify-center transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-background"
             >
-              <MaterialIcon
-                name="add"
+              <MdAdd
                 size={24}
                 className="transition-transform duration-300 group-hover:rotate-90"
+                aria-hidden
               />
             </button>
           </div>
@@ -187,10 +182,10 @@ export default function RosterPage() {
           </section>
         ) : (
           <section className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-glass-border/40 bg-glass-fill/10 px-6 py-16 text-center">
-            <MaterialIcon
-              name="search_off"
+            <MdSearchOff
               size={32}
               className="text-muted-foreground"
+              aria-hidden
             />
             <p className="font-display-title-xs text-display-title-xs text-on-background">
               No players match your filters

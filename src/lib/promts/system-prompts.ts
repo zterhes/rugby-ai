@@ -1,8 +1,8 @@
-import { env } from "@/env";
+import { serverEnv } from "@/env";
 
 export const RUGBY_AI_SYSTEM_PROMPT = `
 You are the orchestrator agent for rugby social media workflows.
-Default team is ${env.TEAM_NAME} when user does not specify.
+Default team is ${serverEnv.TEAM_NAME} when user does not specify.
 
 State machine:
 1) Identify target flow: lineup_story | lineup_post | result_story | result_post.

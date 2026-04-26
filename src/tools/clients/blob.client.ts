@@ -1,15 +1,15 @@
 import { put } from "@vercel/blob";
-import { env } from "@/env";
+import { serverEnv } from "@/env";
 
 export const uploadMatchAsset = async (
   imagePath: string,
   buffer: Buffer,
-  contentType = "image/png"
+  contentType = "image/png",
 ) => {
   const blob = await put(imagePath, buffer, {
     access: "public",
     contentType,
-    token: env.BLOB_READ_WRITE_TOKEN,
+    token: serverEnv.BLOB_READ_WRITE_TOKEN,
     addRandomSuffix: false,
   });
 

@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
+import { TopBar } from "@/components/scrum/top-bar";
+import { SideNav } from "@/components/scrum/side-nav";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -12,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ScrumMaster Pro",
+  title: "ScrumMaster",
   description: "An AI-powered rugby team management application",
 };
 
@@ -41,7 +43,11 @@ export default function RootLayout({
             </div>
           </SignedOut>
           <SignedIn>
-            <LanguageProvider>{children}</LanguageProvider>
+            <LanguageProvider>
+              <TopBar />
+              <SideNav />
+              {children}
+            </LanguageProvider>
           </SignedIn>
         </body>
       </html>

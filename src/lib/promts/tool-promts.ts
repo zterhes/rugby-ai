@@ -1,9 +1,9 @@
-import { env } from "@/env";
+import { serverEnv } from "@/env";
 
 export const EXTRACT_MATCH_DATA_FROM_PDF_TOOL_PROMPT = `
 Use this tool when the user attached a match report PDF and lineup data should be extracted.
 You should pass the text content you can read from the attachment into sourceText.
-If no explicit team is requested, focus extraction on ${env.TEAM_NAME}.
+If no explicit team is requested, focus extraction on ${serverEnv.TEAM_NAME}.
 Only pass relevant lines so extraction quality stays high.
 `;
 
