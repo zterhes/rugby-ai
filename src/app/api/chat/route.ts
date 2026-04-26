@@ -1,8 +1,9 @@
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { env } from "@/env";
-import { rosterImageGeneratorTool } from "@/tools/roster-image-generation";
 import { RUGBY_AI_SYSTEM_PROMPT } from "@/lib/promts/system-prompts";
+import { extractMatchDataFromPdfTool } from "@/tools/extract-match-data-from-pdf";
+import { renderMatchImageTool } from "@/tools/render-match-image";
 
 export const maxDuration = 30;
 
@@ -10,7 +11,9 @@ export async function POST(req: Request) {
   const google = createGoogleGenerativeAI({
     apiKey: env.GOOGLE_AI_API_KEY,
   });
-  const model = google("gemini-2.5-flash");
+
+  const orchestratorModel = google("gemini-2.5-flash");
+
   const {
     messages,
   }: {
@@ -18,11 +21,12 @@ export async function POST(req: Request) {
   } = await req.json();
 
   const result = streamText({
-    model: model,
+    model: orchestratorModel,
     messages: convertToModelMessages(messages),
     system: RUGBY_AI_SYSTEM_PROMPT,
     tools: {
-      rosterImageGenerator: rosterImageGeneratorTool,
+      extractMatchDataFromPdf: extractMatchDataFromPdfTool,
+      renderMatchImage: renderMatchImageTool,
     },
   });
 

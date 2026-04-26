@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
-import ChatBot from "./page";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "900"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Rugby AI Assistant",
+  title: "ScrumMaster Pro",
   description: "An AI-powered rugby team management application",
 };
 
@@ -27,29 +23,25 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+      <html lang="en" className={`dark ${inter.variable}`}>
+        <body className="bg-background text-on-background font-body antialiased min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
           <SignedOut>
-            <div className="flex justify-center items-center h-screen bg-background">
+            <div className="flex justify-center items-center min-h-screen bg-background">
               <SignIn
                 appearance={{
                   variables: {
-                    colorPrimary: "hsl(var(--primary))",
-                    colorForeground: "hsl(var(--foreground))",
-                    colorBackground: "hsl(var(--background))",
-                    colorText: "hsl(var(--foreground))",
-                    colorBorder: "hsl(var(--border))",
+                    colorPrimary: "#dc2626",
+                    colorBackground: "#14181f",
+                    colorText: "#f1f2f4",
+                    colorInputBackground: "#1d222a",
+                    colorInputText: "#f1f2f4",
                   },
                 }}
               />
             </div>
           </SignedOut>
           <SignedIn>
-            <LanguageProvider>
-              <ChatBot />
-            </LanguageProvider>
+            <LanguageProvider>{children}</LanguageProvider>
           </SignedIn>
         </body>
       </html>
