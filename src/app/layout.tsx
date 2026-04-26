@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
-import { TopBar } from "@/components/scrum/top-bar";
-import { SideNav } from "@/components/scrum/side-nav";
+import { NavigationBar } from "@/components/scrum/navigation";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -43,11 +43,11 @@ export default function RootLayout({
             </div>
           </SignedOut>
           <SignedIn>
-            <LanguageProvider>
-              <TopBar />
-              <SideNav />
-              {children}
-            </LanguageProvider>
+            <QueryProvider>
+              <LanguageProvider>
+                <NavigationBar>{children}</NavigationBar>
+              </LanguageProvider>
+            </QueryProvider>
           </SignedIn>
         </body>
       </html>

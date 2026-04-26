@@ -1,14 +1,9 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { MdNotifications, MdSearch, MdSettings } from "react-icons/md";
+import { MdNotifications, MdSettings } from "react-icons/md";
 
-type TopBarProps = {
-  onSearchChange?: (value: string) => void;
-  searchValue?: string;
-};
-
-export function TopBar({ onSearchChange, searchValue = "" }: TopBarProps) {
+export function TopBar() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 h-16 px-6 flex justify-between items-center border-b border-white/10 bg-zinc-950/70 backdrop-blur-xl shadow-2xl shadow-black/50 font-sans antialiased text-sm tracking-tight">
       <div className="flex items-center gap-4">
@@ -18,21 +13,6 @@ export function TopBar({ onSearchChange, searchValue = "" }: TopBarProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="hidden md:flex items-center bg-surface-elevated/50 border border-white/5 rounded-full px-4 py-1.5 focus-within:border-primary-container/50 transition-colors">
-          <MdSearch
-            size={18}
-            className="text-muted-foreground mr-2 shrink-0"
-            aria-hidden
-          />
-          <input
-            type="text"
-            placeholder="Quick find..."
-            value={searchValue}
-            onChange={(e) => onSearchChange?.(e.target.value)}
-            className="bg-transparent border-none outline-none text-on-background text-sm w-48 placeholder:text-muted-foreground/70"
-          />
-        </div>
-
         <button
           type="button"
           aria-label="Notifications"

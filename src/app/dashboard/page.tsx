@@ -45,7 +45,7 @@ export default function DashboardPage() {
     <>
       <div className="pointer-events-none fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface-variant/30 via-background to-background" />
 
-      <main className="md:ml-64 pt-24 md:pt-12 px-6 pb-12 max-w-7xl mx-auto min-h-screen">
+      <main className="px-6 pb-12 max-w-7xl mx-auto min-h-screen">
         <div className="flex flex-col gap-8">
           <section className="flex justify-between items-end">
             <div>
@@ -77,7 +77,10 @@ export default function DashboardPage() {
                     Next Match
                   </span>
                   <span className="font-body-ui text-muted-foreground flex items-center gap-1">
-                    <MdCalendarToday className="text-base shrink-0" aria-hidden />
+                    <MdCalendarToday
+                      className="text-base shrink-0"
+                      aria-hidden
+                    />
                     Sat, Oct 28 - 14:00
                   </span>
                 </div>
@@ -103,7 +106,10 @@ export default function DashboardPage() {
 
             <aside className="rounded-xl border border-glass-border/30 shadow-xl backdrop-blur-xl bg-glass-fill/60 p-6 flex flex-col gap-6">
               <h3 className="font-display-title-xs text-on-surface flex items-center gap-2">
-                <MdHealthAndSafety className="text-primary text-xl shrink-0" aria-hidden />
+                <MdHealthAndSafety
+                  className="text-primary text-xl shrink-0"
+                  aria-hidden
+                />
                 Squad Health
               </h3>
 
@@ -111,7 +117,9 @@ export default function DashboardPage() {
                 <div>
                   <div className="flex justify-between font-body-ui text-secondary mb-2">
                     <span>Total Roster</span>
-                    <span className="text-on-surface font-bold">28 Players</span>
+                    <span className="text-on-surface font-bold">
+                      28 Players
+                    </span>
                   </div>
                   <div className="h-1.5 w-full bg-surface-elevated rounded-full overflow-hidden">
                     <div className="h-full bg-secondary-fixed-dim rounded-full w-full" />
@@ -134,7 +142,10 @@ export default function DashboardPage() {
                 <div className="p-4 rounded-lg border border-red-900/30 bg-red-950/20 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-red-900/40 flex items-center justify-center text-error">
-                      <MdLocalHospital className="text-xl shrink-0" aria-hidden />
+                      <MdLocalHospital
+                        className="text-xl shrink-0"
+                        aria-hidden
+                      />
                     </div>
                     <div>
                       <div className="font-body-ui text-on-surface">
@@ -153,7 +164,10 @@ export default function DashboardPage() {
             <section className="lg:col-span-2 rounded-xl border border-glass-border/30 shadow-xl backdrop-blur-xl bg-glass-fill/40 p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-display-title-xs text-on-surface flex items-center gap-2">
-                  <MdHistory className="text-secondary text-xl shrink-0" aria-hidden />
+                  <MdHistory
+                    className="text-secondary text-xl shrink-0"
+                    aria-hidden
+                  />
                   Recent Form
                 </h3>
                 <Link
@@ -172,7 +186,9 @@ export default function DashboardPage() {
                     className="w-full flex items-center justify-between p-4 rounded-lg bg-surface-elevated/50 border border-white/5 hover:bg-surface-elevated transition-colors group cursor-pointer text-left"
                   >
                     <span className="flex items-center gap-4">
-                      <span className={`w-1.5 h-10 rounded-full ${result.sideBarClass}`} />
+                      <span
+                        className={`w-1.5 h-10 rounded-full ${result.sideBarClass}`}
+                      />
                       <span>
                         <span
                           className={`block font-label mb-0.5 ${result.statusClass}`}
@@ -200,13 +216,16 @@ export default function DashboardPage() {
 
             <section className="rounded-xl border border-glass-border/30 shadow-xl backdrop-blur-xl bg-glass-fill/40 p-6">
               <h3 className="font-display-title-xs text-on-surface flex items-center gap-2 mb-6">
-                <MdBolt className="text-secondary text-xl shrink-0" aria-hidden />
+                <MdBolt
+                  className="text-secondary text-xl shrink-0"
+                  aria-hidden
+                />
                 Quick Actions
               </h3>
 
               <div className="flex flex-col gap-3">
                 <Link
-                  href="/roster"
+                  href="/roster/new?new=true"
                   className="w-full flex items-center gap-3 p-4 rounded-lg bg-surface-elevated/40 border border-white/5 hover:bg-white/5 transition-colors text-left group"
                 >
                   <span className="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-secondary group-hover:text-primary transition-colors">

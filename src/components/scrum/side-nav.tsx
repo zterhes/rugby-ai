@@ -54,7 +54,7 @@ export function SideNav() {
   };
 
   return (
-    <nav className="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 z-40 border-r border-white/5 bg-zinc-950/80 backdrop-blur-2xl shadow-[20px_0_50px_rgba(0,0,0,0.5)] pt-20 pb-6">
+    <nav className="hidden md:flex flex-col fixed left-0 top-16 bottom-0 w-64 z-40 border-r border-white/5 bg-zinc-950/80 backdrop-blur-2xl shadow-[20px_0_50px_rgba(0,0,0,0.5)] pt-6 pb-6">
       <div className="px-6 mb-8 flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-surface border border-white/10 flex items-center justify-center overflow-hidden">
           <MdSportsRugby
@@ -66,9 +66,6 @@ export function SideNav() {
           <h2 className="text-on-background font-display-title-xs text-display-title-xs leading-tight">
             {TEAM_NAME}
           </h2>
-          <p className="text-muted-foreground font-subtitle-xs text-[11px]">
-            Elite Division
-          </p>
         </div>
       </div>
 
