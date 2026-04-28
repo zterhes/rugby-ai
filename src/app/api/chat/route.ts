@@ -1,6 +1,6 @@
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { env } from "@/env";
+import { serverEnv } from "@/env";
 import { RUGBY_AI_SYSTEM_PROMPT } from "@/lib/promts/system-prompts";
 import { extractMatchDataFromPdfTool } from "@/tools/extract-match-data-from-pdf";
 import { renderMatchImageTool } from "@/tools/render-match-image";
@@ -9,7 +9,7 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const google = createGoogleGenerativeAI({
-    apiKey: env.GOOGLE_AI_API_KEY,
+    apiKey: serverEnv.GOOGLE_AI_API_KEY,
   });
 
   const orchestratorModel = google("gemini-2.5-flash");

@@ -236,9 +236,8 @@ export default function DashboardPage() {
                   </span>
                 </Link>
 
-                {/* TODO: replace with /schedule once schedule page exists */}
                 <Link
-                  href="#"
+                  href="/schedule"
                   className="w-full flex items-center gap-3 p-4 rounded-lg bg-surface-elevated/40 border border-white/5 hover:bg-white/5 transition-colors text-left group"
                 >
                   <span className="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-secondary group-hover:text-primary transition-colors">
