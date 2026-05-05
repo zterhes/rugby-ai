@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { SchedulePageView } from "@/components/scrum/schedule/schedule-page-view";
 import {
   createScheduleMatch,
@@ -86,9 +87,13 @@ export function SchedulePageContainer() {
       setIsCreateMatchOpen(false);
       setMatchDraft(DEFAULT_MATCH_DRAFT);
       setMatchFormError(null);
+      toast.success("Match created successfully.");
     },
-    onError: () => {
-      setMatchFormError("Could not create match. Please try again.");
+    onError: (error) => {
+      const message =
+        error instanceof Error ? error.message : "Could not create match. Please try again.";
+      setMatchFormError(message);
+      toast.error(message);
     },
   });
 
@@ -100,9 +105,13 @@ export function SchedulePageContainer() {
       setTeamDraft(DEFAULT_TEAM_DRAFT);
       setTeamFormError(null);
       setIsCreateTeamOpen(false);
+      toast.success("Team added successfully.");
     },
-    onError: () => {
-      setTeamFormError("Could not add team. Please try again.");
+    onError: (error) => {
+      const message =
+        error instanceof Error ? error.message : "Could not add team. Please try again.";
+      setTeamFormError(message);
+      toast.error(message);
     },
   });
 

@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRef, type ChangeEvent } from "react";
 import {
   MdArrowBack,
   MdBadge,
   MdCall,
+  MdCloudUpload,
   MdEdit,
   MdEmail,
+  MdOutlineDelete,
   MdSave,
 } from "react-icons/md";
 import type { Player } from "@/lib/data/players";
@@ -26,6 +29,7 @@ type PlayerProfilePageViewProps = {
     key: K,
     value: PlayerFormDraft[K],
   ) => void;
+  onAvatarSelected?: (file: File) => void;
   onStartEdit?: () => void;
   onCancelEdit?: () => void;
   onSave?: () => void;
@@ -48,6 +52,14 @@ function getInitials(name: string): string {
     .join("");
 }
 
+function resolveAvatarSrc(playerId: string | undefined, avatarUrl: string | undefined) {
+  if (!avatarUrl) return undefined;
+  if (avatarUrl.includes(".private.blob.vercel-storage.com") && playerId) {
+    return `/api/v1/players/${playerId}/avatar`;
+  }
+  return avatarUrl;
+}
+
 export function PlayerProfilePageView({
   state,
   mode,
@@ -57,11 +69,13 @@ export function PlayerProfilePageView({
   submitError,
   isSubmitting = false,
   onFieldChange,
+  onAvatarSelected,
   onStartEdit,
   onCancelEdit,
   onSave,
 }: PlayerProfilePageViewProps) {
   const isFormMode = mode === "edit" || mode === "create";
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (state === "loading") {
     return (
@@ -111,8 +125,21 @@ export function PlayerProfilePageView({
 
   const playerName = form?.name || player?.name || "New Player";
   const playerAvatar = form?.avatarUrl || player?.avatarUrl;
+  const avatarSrc = resolveAvatarSrc(player?.id, playerAvatar);
   const isPaid = (form?.duesStatus ?? player?.duesStatus ?? "pending") === "paid";
   const initials = getInitials(playerName);
+
+  const handleUploadClick = () => {
+    if (!isFormMode || isSubmitting) return;
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    onAvatarSelected?.(file);
+    event.target.value = "";
+  };
 
   return (
     <>
@@ -168,9 +195,9 @@ export function PlayerProfilePageView({
         <section className="rounded-xl border border-glass-border/30 bg-glass-fill/40 backdrop-blur-xl p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border border-glass-border/50 bg-surface-elevated">
-              {playerAvatar ? (
+              {avatarSrc ? (
                 <Image
-                  src={playerAvatar}
+                  src={avatarSrc}
                   alt={`${playerName} profile photo`}
                   fill
                   sizes="112px"
@@ -181,6 +208,28 @@ export function PlayerProfilePageView({
                   {initials}
                 </span>
               )}
+              {isFormMode ? (
+                <>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleUploadClick}
+                    disabled={isSubmitting}
+                    className="absolute inset-0 flex items-end justify-center bg-black/35 pb-2 text-xs font-semibold text-white transition hover:bg-black/45 disabled:cursor-not-allowed"
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      <MdCloudUpload className="text-base" aria-hidden />
+                      {isSubmitting ? "Saving..." : "Upload"}
+                    </span>
+                  </button>
+                </>
+              ) : null}
             </div>
 
             <div className="flex-1">
@@ -265,12 +314,22 @@ export function PlayerProfilePageView({
                       ) : null}
                     </div>
                     <div className="md:col-span-2">
-                      <input
-                        value={form?.avatarUrl ?? ""}
-                        onChange={(e) => onFieldChange?.("avatarUrl", e.target.value)}
-                        placeholder="Avatar URL (optional)"
-                        className={INPUT_CLASSES}
-                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <input
+                          value={form?.avatarUrl ?? ""}
+                          onChange={(e) => onFieldChange?.("avatarUrl", e.target.value)}
+                          placeholder="Avatar URL (optional)"
+                          className={`${INPUT_CLASSES} flex-1`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => onFieldChange?.("avatarUrl", "")}
+                          className="inline-flex items-center gap-1 rounded-md border border-glass-border/50 px-3 py-2 text-xs text-muted-foreground hover:text-on-background"
+                        >
+                          <MdOutlineDelete className="text-sm" aria-hidden />
+                          Remove
+                        </button>
+                      </div>
                       {errors?.avatarUrl ? (
                         <p className="mt-1 text-xs text-error">{errors.avatarUrl}</p>
                       ) : null}

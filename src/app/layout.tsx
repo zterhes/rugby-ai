@@ -5,6 +5,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { NavigationBar } from "@/components/scrum/navigation";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -46,6 +47,7 @@ export default function RootLayout({
             <QueryProvider>
               <LanguageProvider>
                 <NavigationBar>{children}</NavigationBar>
+                <Toaster />
               </LanguageProvider>
             </QueryProvider>
           </SignedIn>

@@ -20,9 +20,18 @@ function getInitials(name: string): string {
     .join("");
 }
 
+function resolveAvatarSrc(player: Player) {
+  if (!player.avatarUrl) return undefined;
+  if (player.avatarUrl.includes(".private.blob.vercel-storage.com")) {
+    return `/api/v1/players/${player.id}/avatar`;
+  }
+  return player.avatarUrl;
+}
+
 export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
   const isPaid = player.duesStatus === "paid";
   const initials = getInitials(player.name);
+  const avatarSrc = resolveAvatarSrc(player);
 
   return (
     <article className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-glass-border/40 bg-glass-fill/30 p-glass-padding backdrop-blur-xl transition-all duration-300 hover:border-glass-border hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
@@ -33,9 +42,9 @@ export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-glass-border/50 bg-surface-elevated shadow-inner">
-            {player.avatarUrl ? (
+            {avatarSrc ? (
               <Image
-                src={player.avatarUrl}
+                src={avatarSrc}
                 alt={`${player.name} profile photo`}
                 fill
                 sizes="48px"

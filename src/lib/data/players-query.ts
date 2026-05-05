@@ -1,4 +1,5 @@
 import type { PlayerFormValues } from "@/lib/data/player-form-schema";
+import { z } from "zod";
 import {
   playerCreateResponseSchema,
   playerResponseSchema,
@@ -81,4 +82,36 @@ export async function updatePlayer(
     }
     throw error;
   }
+}
+
+const avatarUploadResponseSchema = z.object({
+  data: z.object({
+    url: z.string().url(),
+  }),
+});
+
+export async function uploadPlayerAvatar(playerId: string, file: File): Promise<string> {
+  const formData = new FormData();
+  formData.set("file", file);
+
+  const res = await fetch(`/api/v1/players/${playerId}/avatar`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    let message = "Avatar upload failed.";
+    try {
+      const payload = await res.json();
+      if (payload?.message) message = String(payload.message);
+    } catch {
+      // no-op
+    }
+    throw new Error(message);
+  }
+
+  const json = await res.json();
+  const parsed = avatarUploadResponseSchema.safeParse(json);
+  if (!parsed.success) throw new Error("Invalid upload response.");
+  return parsed.data.data.url;
 }

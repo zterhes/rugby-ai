@@ -36,6 +36,11 @@ export function notFound(message: string) {
   return NextResponse.json(payload, { status: 404 });
 }
 
+export function internalError(message = "Internal server error", requestId?: string) {
+  const payload = apiErrorSchema.parse({ code: "INTERNAL_ERROR", message, requestId });
+  return NextResponse.json(payload, { status: 500 });
+}
+
 export async function parseJson<T extends z.ZodTypeAny>(
   req: Request,
   schema: T,
