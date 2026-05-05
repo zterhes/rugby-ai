@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { RosterPageView } from "@/components/scrum/roster/roster-page-view";
 import { type DuesStatus, type Player, type PlayerPosition } from "@/lib/data/players";
 import { getPlayers, PLAYERS_QUERY_KEY } from "@/lib/data/players-query";
@@ -40,33 +40,16 @@ export function RosterPageContainer() {
   const [status, setStatus] = useState<"" | DuesStatus>("");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: PLAYERS_QUERY_KEY,
-    queryFn: getPlayers,
+    queryKey: [...PLAYERS_QUERY_KEY, search, position, status],
+    queryFn: () =>
+      getPlayers({
+        search: search.trim() || undefined,
+        position,
+        duesStatus: status,
+      }),
   });
 
-  const filteredPlayers = useMemo(() => {
-    const players = data ?? [];
-    const term = search.trim().toLowerCase();
-
-    return players.filter((player) => {
-      if (position && player.position !== position) return false;
-      if (status && player.duesStatus !== status) return false;
-
-      if (term) {
-        const haystack = [
-          player.name,
-          player.positionLabel,
-          player.email,
-          player.licenseId,
-        ]
-          .join(" ")
-          .toLowerCase();
-        return haystack.includes(term);
-      }
-
-      return true;
-    });
-  }, [data, search, position, status]);
+  const filteredPlayers = data ?? [];
 
   const handleViewProfile = (player: Player) => {
     router.push(`/roster/${player.id}`);

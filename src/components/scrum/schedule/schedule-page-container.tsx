@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SchedulePageView } from "@/components/scrum/schedule/schedule-page-view";
 import {
@@ -15,7 +15,6 @@ import {
   TEAMS_QUERY_KEY,
   type CreateTeamInput,
 } from "@/lib/data/teams-query";
-import type { Team } from "@/lib/data/teams";
 
 export type MatchDraft = {
   fixtureType: "home" | "away";
@@ -51,8 +50,6 @@ const DEFAULT_TEAM_DRAFT: TeamDraft = {
   venueMapUrl: "",
 };
 
-const TEAM_NAME = process.env.NEXT_PUBLIC_TEAM_NAME ?? "First XV";
-
 export function SchedulePageContainer() {
   const queryClient = useQueryClient();
   const [selectedMatchId, setSelectedMatchId] = useState<number | null>(null);
@@ -69,7 +66,7 @@ export function SchedulePageContainer() {
     isError: isMatchesError,
   } = useQuery({
     queryKey: SCHEDULE_MATCHES_QUERY_KEY,
-    queryFn: getScheduleMatches,
+    queryFn: () => getScheduleMatches(),
   });
 
   const {
@@ -78,7 +75,7 @@ export function SchedulePageContainer() {
     isError: isTeamsError,
   } = useQuery({
     queryKey: TEAMS_QUERY_KEY,
-    queryFn: getTeams,
+    queryFn: () => getTeams(),
   });
 
   const createMatchMutation = useMutation({
@@ -109,8 +106,8 @@ export function SchedulePageContainer() {
     },
   });
 
-  const matches = matchesData ?? [];
-  const teams = teamsData ?? [];
+  const matches = useMemo(() => matchesData ?? [], [matchesData]);
+  const teams = useMemo(() => teamsData ?? [], [teamsData]);
 
   const groupedMatches = useMemo(() => {
     return matches.reduce<Record<string, typeof matches>>((acc, match) => {
@@ -122,21 +119,6 @@ export function SchedulePageContainer() {
     }, {});
   }, [matches]);
 
-  useEffect(() => {
-    if (!matches.length) {
-      setSelectedMatchId(null);
-      return;
-    }
-
-    if (selectedMatchId !== null) {
-      const exists = matches.some((match) => match.id === selectedMatchId);
-      if (exists) return;
-    }
-
-    const defaultMatch = matches.find((match) => match.isActive) ?? matches[0];
-    setSelectedMatchId(defaultMatch.id);
-  }, [matches, selectedMatchId]);
-
   const activeMatch = useMemo(() => {
     if (!matches.length) return null;
     if (selectedMatchId === null) {
@@ -144,6 +126,8 @@ export function SchedulePageContainer() {
     }
     return matches.find((match) => match.id === selectedMatchId) ?? matches[0];
   }, [matches, selectedMatchId]);
+
+  const effectiveSelectedMatchId = activeMatch?.id ?? null;
 
   const selectedOpponent = useMemo(() => {
     return teams.find((team) => team.id === matchDraft.opponentTeamId) ?? null;
@@ -188,14 +172,13 @@ export function SchedulePageContainer() {
 
     const payload: CreateScheduleMatchInput = {
       fixtureType: matchDraft.fixtureType,
-      opponentTeam,
+      opponentTeamId: matchDraft.opponentTeamId,
       dateIso: matchDraft.dateIso,
       kickoffTime: matchDraft.kickoffTime,
       roundLabel: matchDraft.roundLabel,
       meetTime: matchDraft.meetTime,
       kitPrimary: matchDraft.kitPrimary,
       kitSecondary: matchDraft.kitSecondary,
-      teamName: TEAM_NAME,
     };
 
     await createMatchMutation.mutateAsync(payload);
@@ -220,11 +203,11 @@ export function SchedulePageContainer() {
     <SchedulePageView
       groupedMatches={groupedMatches}
       activeMatch={activeMatch}
-      selectedMatchId={selectedMatchId}
+      selectedMatchId={effectiveSelectedMatchId}
       isLoading={isMatchesLoading}
       isError={isMatchesError}
       onSelectMatch={setSelectedMatchId}
-      teamName={TEAM_NAME}
+      teamName={process.env.NEXT_PUBLIC_TEAM_NAME ?? "First XV"}
       teams={teams}
       isTeamsLoading={isTeamsLoading}
       isTeamsError={isTeamsError}

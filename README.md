@@ -82,3 +82,32 @@ rugby-ai/
 - `pnpm build` - Build for production
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
+
+## API Contract (v1)
+
+The project now exposes REST-style API contract endpoints under `src/app/api/v1` using Next.js Route Handlers.
+
+### Contract schemas
+
+All contract schemas are defined in:
+
+- `src/lib/api/contracts/common.ts`
+- `src/lib/api/contracts/players.ts`
+- `src/lib/api/contracts/teams.ts`
+- `src/lib/api/contracts/schedule.ts`
+- `src/lib/api/contracts/roster.ts`
+- `src/lib/api/contracts/dashboard.ts`
+
+### OpenAPI generation
+
+OpenAPI is generated from the Zod contracts in `src/lib/api/openapi.ts` and exposed at:
+
+- `GET /api/v1/openapi.json`
+
+### API docs UI
+
+Scalar docs page is available at:
+
+- `/api-docs`
+
+This page loads the generated OpenAPI document from `/api/v1/openapi.json`.

@@ -17,6 +17,7 @@ import {
   updatePlayer,
 } from "@/lib/data/players-query";
 import { PlayerProfilePageView } from "@/components/scrum/roster/player-profile-page-view";
+import { ApiClientError } from "@/lib/api/client/http";
 
 type PlayerProfileMode = "view" | "edit" | "create";
 
@@ -46,6 +47,21 @@ function toFieldErrors(issues: { path: PropertyKey[]; message: string }[]) {
     }
     return acc;
   }, {});
+}
+
+function applyApiFieldErrors(error: unknown, setErrors: (errors: PlayerFormErrors) => void) {
+  if (!(error instanceof ApiClientError) || !error.payload?.fieldErrors) return false;
+
+  const mapped = error.payload.fieldErrors.reduce<PlayerFormErrors>((acc, item) => {
+    const field = item.field as keyof PlayerFormErrors;
+    if (!acc[field]) {
+      acc[field] = item.message;
+    }
+    return acc;
+  }, {});
+
+  setErrors(mapped);
+  return true;
 }
 
 export function PlayerProfilePageContainer({
@@ -90,7 +106,11 @@ export function PlayerProfilePageContainer({
       queryClient.setQueryData(playerQueryKey(createdPlayer.id), createdPlayer);
       router.push(`/roster/${createdPlayer.id}`);
     },
-    onError: () => {
+    onError: (error) => {
+      if (applyApiFieldErrors(error, setErrors)) {
+        setSubmitError("Please fix the highlighted fields.");
+        return;
+      }
       setSubmitError("Could not create player. Please try again.");
     },
   });
@@ -110,7 +130,11 @@ export function PlayerProfilePageContainer({
       queryClient.setQueryData(playerQueryKey(updatedPlayer.id), updatedPlayer);
       router.push(`/roster/${updatedPlayer.id}`);
     },
-    onError: () => {
+    onError: (error) => {
+      if (applyApiFieldErrors(error, setErrors)) {
+        setSubmitError("Please fix the highlighted fields.");
+        return;
+      }
       setSubmitError("Could not save changes. Please try again.");
     },
   });

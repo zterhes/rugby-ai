@@ -1,8 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 import {
   MdBolt,
   MdCalendarToday,
-  MdCampaign,
   MdChevronRight,
   MdEditCalendar,
   MdHealthAndSafety,
@@ -12,35 +14,18 @@ import {
   MdPersonAdd,
   MdSportsRugby,
 } from "react-icons/md";
-
-const RECENT_RESULTS = [
-  {
-    id: "match-1",
-    status: "WON",
-    statusClass: "text-emerald-400",
-    sideBarClass: "bg-emerald-500",
-    opponent: "vs Northern Tigers",
-    score: "24 - 12",
-  },
-  {
-    id: "match-2",
-    status: "WON",
-    statusClass: "text-emerald-400",
-    sideBarClass: "bg-emerald-500",
-    opponent: "@ Eastern Blues",
-    score: "18 - 15",
-  },
-  {
-    id: "match-3",
-    status: "LOST",
-    statusClass: "text-error",
-    sideBarClass: "bg-red-500",
-    opponent: "vs Southside Chiefs",
-    score: "7 - 21",
-  },
-];
+import { DASHBOARD_OVERVIEW_QUERY_KEY, getDashboardOverview } from "@/lib/data/dashboard-query";
 
 export default function DashboardPage() {
+  const { data, isLoading } = useQuery({
+    queryKey: DASHBOARD_OVERVIEW_QUERY_KEY,
+    queryFn: getDashboardOverview,
+  });
+
+  const nextMatch = data?.nextMatch;
+  const squadHealth = data?.squadHealth;
+  const recentResults = data?.recentResults ?? [];
+
   return (
     <>
       <div className="pointer-events-none fixed inset-0 z-[-1] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface-variant/30 via-background to-background" />
@@ -77,21 +62,18 @@ export default function DashboardPage() {
                     Next Match
                   </span>
                   <span className="font-body-ui text-muted-foreground flex items-center gap-1">
-                    <MdCalendarToday
-                      className="text-base shrink-0"
-                      aria-hidden
-                    />
-                    Sat, Oct 28 - 14:00
+                    <MdCalendarToday className="text-base shrink-0" aria-hidden />
+                    {isLoading ? "Loading..." : nextMatch?.dateTimeLabel ?? "No upcoming match"}
                   </span>
                 </div>
 
                 <div>
                   <p className="font-subtitle text-secondary mb-2 flex items-center gap-1">
                     <MdLocationOn className="text-base shrink-0" aria-hidden />
-                    Away @ Memorial Stadium
+                    {nextMatch?.venueLabel ?? "Venue TBD"}
                   </p>
                   <h2 className="font-display-title text-4xl md:text-5xl text-on-surface mb-6 leading-tight">
-                    West Coast Raiders
+                    {nextMatch?.opponent ?? "TBD"}
                   </h2>
                   <button
                     type="button"
@@ -106,10 +88,7 @@ export default function DashboardPage() {
 
             <aside className="rounded-xl border border-glass-border/30 shadow-xl backdrop-blur-xl bg-glass-fill/60 p-6 flex flex-col gap-6">
               <h3 className="font-display-title-xs text-on-surface flex items-center gap-2">
-                <MdHealthAndSafety
-                  className="text-primary text-xl shrink-0"
-                  aria-hidden
-                />
+                <MdHealthAndSafety className="text-primary text-xl shrink-0" aria-hidden />
                 Squad Health
               </h3>
 
@@ -117,9 +96,7 @@ export default function DashboardPage() {
                 <div>
                   <div className="flex justify-between font-body-ui text-secondary mb-2">
                     <span>Total Roster</span>
-                    <span className="text-on-surface font-bold">
-                      28 Players
-                    </span>
+                    <span className="text-on-surface font-bold">{squadHealth?.totalRoster ?? 0} Players</span>
                   </div>
                   <div className="h-1.5 w-full bg-surface-elevated rounded-full overflow-hidden">
                     <div className="h-full bg-secondary-fixed-dim rounded-full w-full" />
@@ -129,34 +106,27 @@ export default function DashboardPage() {
                 <div>
                   <div className="flex justify-between font-body-ui text-secondary mb-2">
                     <span>Dues Collected</span>
-                    <span className="text-on-surface font-bold">22 / 28</span>
+                    <span className="text-on-surface font-bold">{squadHealth?.duesCollected ?? 0} / {squadHealth?.totalRoster ?? 0}</span>
                   </div>
                   <div className="h-1.5 w-full bg-surface-elevated rounded-full overflow-hidden">
-                    <div className="h-full bg-primary-container rounded-full w-[78%] shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
+                    <div className="h-full bg-primary-container rounded-full shadow-[0_0_10px_rgba(220,38,38,0.8)]" style={{ width: `${squadHealth?.compliancePercent ?? 0}%` }} />
                   </div>
                   <p className="font-subtitle-xs text-muted-foreground mt-1 text-right">
-                    78% Compliant
+                    {squadHealth?.compliancePercent ?? 0}% Compliant
                   </p>
                 </div>
 
                 <div className="p-4 rounded-lg border border-red-900/30 bg-red-950/20 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-red-900/40 flex items-center justify-center text-error">
-                      <MdLocalHospital
-                        className="text-xl shrink-0"
-                        aria-hidden
-                      />
+                      <MdLocalHospital className="text-xl shrink-0" aria-hidden />
                     </div>
                     <div>
-                      <div className="font-body-ui text-on-surface">
-                        Active Injuries
-                      </div>
-                      <div className="font-subtitle-xs text-muted-foreground">
-                        Requires medical clearance
-                      </div>
+                      <div className="font-body-ui text-on-surface">Active Injuries</div>
+                      <div className="font-subtitle-xs text-muted-foreground">Requires medical clearance</div>
                     </div>
                   </div>
-                  <span className="font-display-title-sm text-error">3</span>
+                  <span className="font-display-title-sm text-error">{squadHealth?.activeInjuries ?? 0}</span>
                 </div>
               </div>
             </aside>
@@ -164,62 +134,43 @@ export default function DashboardPage() {
             <section className="lg:col-span-2 rounded-xl border border-glass-border/30 shadow-xl backdrop-blur-xl bg-glass-fill/40 p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-display-title-xs text-on-surface flex items-center gap-2">
-                  <MdHistory
-                    className="text-secondary text-xl shrink-0"
-                    aria-hidden
-                  />
+                  <MdHistory className="text-secondary text-xl shrink-0" aria-hidden />
                   Recent Form
                 </h3>
-                <Link
-                  href="/roster"
-                  className="font-label text-primary hover:text-primary-fixed transition-colors"
-                >
+                <Link href="/roster" className="font-label text-primary hover:text-primary-fixed transition-colors">
                   View All
                 </Link>
               </div>
 
               <div className="space-y-3">
-                {RECENT_RESULTS.map((result) => (
-                  <button
-                    key={result.id}
-                    type="button"
-                    className="w-full flex items-center justify-between p-4 rounded-lg bg-surface-elevated/50 border border-white/5 hover:bg-surface-elevated transition-colors group cursor-pointer text-left"
-                  >
-                    <span className="flex items-center gap-4">
-                      <span
-                        className={`w-1.5 h-10 rounded-full ${result.sideBarClass}`}
-                      />
-                      <span>
-                        <span
-                          className={`block font-label mb-0.5 ${result.statusClass}`}
-                        >
-                          {result.status}
-                        </span>
-                        <span className="block font-body-ui text-on-surface">
-                          {result.opponent}
+                {recentResults.map((result) => {
+                  const won = result.status === "WON";
+                  return (
+                    <button
+                      key={result.id}
+                      type="button"
+                      className="w-full flex items-center justify-between p-4 rounded-lg bg-surface-elevated/50 border border-white/5 hover:bg-surface-elevated transition-colors group cursor-pointer text-left"
+                    >
+                      <span className="flex items-center gap-4">
+                        <span className={`w-1.5 h-10 rounded-full ${won ? "bg-emerald-500" : "bg-red-500"}`} />
+                        <span>
+                          <span className={`block font-label mb-0.5 ${won ? "text-emerald-400" : "text-error"}`}>{result.status}</span>
+                          <span className="block font-body-ui text-on-surface">{result.opponent}</span>
                         </span>
                       </span>
-                    </span>
-                    <span className="flex items-center gap-6">
-                      <span className="font-display-title-sm text-on-surface">
-                        {result.score}
+                      <span className="flex items-center gap-6">
+                        <span className="font-display-title-sm text-on-surface">{result.score}</span>
+                        <MdChevronRight className="text-muted-foreground group-hover:text-on-surface transition-colors text-xl shrink-0" aria-hidden />
                       </span>
-                      <MdChevronRight
-                        className="text-muted-foreground group-hover:text-on-surface transition-colors text-xl shrink-0"
-                        aria-hidden
-                      />
-                    </span>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </section>
 
             <section className="rounded-xl border border-glass-border/30 shadow-xl backdrop-blur-xl bg-glass-fill/40 p-6">
               <h3 className="font-display-title-xs text-on-surface flex items-center gap-2 mb-6">
-                <MdBolt
-                  className="text-secondary text-xl shrink-0"
-                  aria-hidden
-                />
+                <MdBolt className="text-secondary text-xl shrink-0" aria-hidden />
                 Quick Actions
               </h3>
 
@@ -231,9 +182,7 @@ export default function DashboardPage() {
                   <span className="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-secondary group-hover:text-primary transition-colors">
                     <MdPersonAdd className="text-lg shrink-0" aria-hidden />
                   </span>
-                  <span className="font-body-ui text-secondary group-hover:text-on-surface transition-colors">
-                    Add New Player
-                  </span>
+                  <span className="font-body-ui text-secondary group-hover:text-on-surface transition-colors">Add New Player</span>
                 </Link>
 
                 <Link
@@ -243,22 +192,7 @@ export default function DashboardPage() {
                   <span className="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-secondary group-hover:text-primary transition-colors">
                     <MdEditCalendar className="text-lg shrink-0" aria-hidden />
                   </span>
-                  <span className="font-body-ui text-secondary group-hover:text-on-surface transition-colors">
-                    Schedule Match
-                  </span>
-                </Link>
-
-                {/* TODO: replace with /assetLibrary once asset library page exists */}
-                <Link
-                  href="#"
-                  className="w-full flex items-center gap-3 p-4 rounded-lg bg-surface-elevated/40 border border-white/5 hover:bg-white/5 transition-colors text-left group"
-                >
-                  <span className="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-secondary group-hover:text-primary transition-colors">
-                    <MdCampaign className="text-lg shrink-0" aria-hidden />
-                  </span>
-                  <span className="font-body-ui text-secondary group-hover:text-on-surface transition-colors">
-                    Generate Social Post
-                  </span>
+                  <span className="font-body-ui text-secondary group-hover:text-on-surface transition-colors">Schedule Match</span>
                 </Link>
               </div>
             </section>
