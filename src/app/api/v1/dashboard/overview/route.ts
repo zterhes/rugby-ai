@@ -6,6 +6,7 @@ import { badRequest, ok } from "@/lib/api/http";
 export async function GET() {
   const totalPlayers = PLAYERS.length;
   const duesCollected = PLAYERS.filter((player) => player.duesStatus === "paid").length;
+  const duesUncollected = Math.max(totalPlayers - duesCollected, 0);
   const compliancePercent = totalPlayers > 0 ? Math.round((duesCollected / totalPlayers) * 100) : 0;
 
   const nextMatch = SCHEDULE_MATCHES.find((match) => match.status === "Upcoming") ?? null;
@@ -31,7 +32,7 @@ export async function GET() {
       squadHealth: {
         totalRoster: totalPlayers,
         duesCollected,
-        activeInjuries: 3,
+        duesUncollected,
         compliancePercent,
       },
       recentResults,

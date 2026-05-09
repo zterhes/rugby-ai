@@ -9,7 +9,7 @@ const nextMatchSchema = z.object({
 const squadHealthSchema = z.object({
   totalRoster: z.number().int().nonnegative(),
   duesCollected: z.number().int().nonnegative(),
-  activeInjuries: z.number().int().nonnegative(),
+  duesUncollected: z.number().int().nonnegative(),
   compliancePercent: z.number().min(0).max(100),
 });
 
