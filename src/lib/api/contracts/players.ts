@@ -64,5 +64,7 @@ export const playerUpdateResponseSchema = z.object({
 });
 
 export type Player = z.infer<typeof playerSchema>;
+export type PlayerPosition = z.infer<typeof playerPositionSchema>;
+export type DuesStatus = z.infer<typeof duesStatusSchema>;
 export type PlayersListQuery = z.infer<typeof playersListQuerySchema>;
 export type PlayerCreateRequest = z.infer<typeof playerCreateRequestSchema>;

@@ -1,12 +1,17 @@
 import { MdCalendarToday, MdLocationOn, MdSportsRugby } from "react-icons/md";
 import type { DashboardNextMatch } from "@/components/scrum/dashboard/dashboard-types";
+import { useRouter } from "next/navigation";
 
 type NextMatchCardProps = {
   isLoading: boolean;
   upcomingMatch: DashboardNextMatch;
 };
 
-export function NextMatchCard({ isLoading, upcomingMatch }: NextMatchCardProps) {
+export function NextMatchCard({
+  isLoading,
+  upcomingMatch,
+}: NextMatchCardProps) {
+  const router = useRouter();
   const nextMatch = upcomingMatch;
   const noUpcomingMatches = !isLoading && !upcomingMatch;
   const localDateTimeLabel = nextMatch
@@ -41,7 +46,9 @@ export function NextMatchCard({ isLoading, upcomingMatch }: NextMatchCardProps) 
           </span>
           <span className="font-body-ui text-muted-foreground flex items-center gap-1">
             <MdCalendarToday className="text-base shrink-0" aria-hidden />
-            {isLoading ? "Loading..." : localDateTimeLabel ?? "there is no upcoming matches"}
+            {isLoading
+              ? "Loading..."
+              : (localDateTimeLabel ?? "there is no upcoming matches")}
           </span>
         </div>
 
@@ -54,14 +61,19 @@ export function NextMatchCard({ isLoading, upcomingMatch }: NextMatchCardProps) 
             {nextMatch?.opponent ?? "TBD"}
           </h2>
           {noUpcomingMatches ? (
-            <p className="font-body-ui text-muted-foreground">there is no upcoming matches</p>
+            <p className="font-body-ui text-muted-foreground">
+              there is no upcoming matches
+            </p>
           ) : (
             <button
               type="button"
               className="bg-primary-container text-on-primary-container hover:bg-primary-container/80 transition-all duration-300 active:scale-95 py-3 px-6 rounded-full font-label flex items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_25px_rgba(220,38,38,0.5)]"
+              onClick={() => {
+                if (nextMatch) router.push(`/line-up/${nextMatch.scheduleId}`);
+              }}
             >
               <MdSportsRugby className="text-lg shrink-0" aria-hidden />
-              Build Lineup
+              Manage Lineup
             </button>
           )}
         </div>

@@ -20,6 +20,11 @@ export const recentResultSchema = z.object({
   score: z.string(),
 });
 
+/** Next upcoming match as returned by GET /api/v1/dashboard/upcoming-matches (includes DB schedule match id). */
+export const dashboardUpcomingMatchItemSchema = nextMatchSchema.extend({
+  scheduleId: z.number().int().positive(),
+});
+
 export const dashboardOverviewSchema = z.object({
   nextMatch: nextMatchSchema.nullable(),
   squadHealth: squadHealthSchema,
@@ -34,7 +39,7 @@ export const dashboardOverviewResponseSchema = z.object({
 });
 
 export const dashboardUpcomingMatchResponseSchema = z.object({
-  data: nextMatchSchema.nullable(),
+  data: dashboardUpcomingMatchItemSchema.nullable(),
 });
 
 export const dashboardRecentFormResponseSchema = z.object({

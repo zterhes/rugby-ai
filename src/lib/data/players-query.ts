@@ -11,7 +11,8 @@ import {
 import { apiGet, apiSend } from "@/lib/api/client/http";
 
 export const PLAYERS_QUERY_KEY = ["players"] as const;
-export const playerQueryKey = (id: string) => [...PLAYERS_QUERY_KEY, id] as const;
+export const playerQueryKey = (id: string) =>
+  [...PLAYERS_QUERY_KEY, id] as const;
 
 export type GetPlayersInput = {
   search?: string;
@@ -31,6 +32,7 @@ export async function getPlayers(input?: GetPlayersInput): Promise<Player[]> {
   });
 
   const res = await apiGet("/api/v1/players", playersListResponseSchema, query);
+  console.log("getPlayers", res.data);
   return res.data;
 }
 
@@ -56,7 +58,12 @@ export async function createPlayer(values: PlayerFormValues): Promise<Player> {
     ...values,
     avatarUrl: values.avatarUrl?.trim() ? values.avatarUrl.trim() : undefined,
   };
-  const res = await apiSend("POST", "/api/v1/players", payload, playerCreateResponseSchema);
+  const res = await apiSend(
+    "POST",
+    "/api/v1/players",
+    payload,
+    playerCreateResponseSchema,
+  );
   return res.data;
 }
 
@@ -69,7 +76,12 @@ export async function updatePlayer(
       ...values,
       avatarUrl: values.avatarUrl?.trim() ? values.avatarUrl.trim() : undefined,
     };
-    const res = await apiSend("PATCH", `/api/v1/players/${id}`, payload, playerUpdateResponseSchema);
+    const res = await apiSend(
+      "PATCH",
+      `/api/v1/players/${id}`,
+      payload,
+      playerUpdateResponseSchema,
+    );
     return res.data;
   } catch (error) {
     if (
@@ -90,7 +102,10 @@ const avatarUploadResponseSchema = z.object({
   }),
 });
 
-export async function uploadPlayerAvatar(playerId: string, file: File): Promise<string> {
+export async function uploadPlayerAvatar(
+  playerId: string,
+  file: File,
+): Promise<string> {
   const formData = new FormData();
   formData.set("file", file);
 

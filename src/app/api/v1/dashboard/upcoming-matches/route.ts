@@ -9,6 +9,7 @@ export async function GET() {
 
   const match = await db
     .select({
+      scheduleId: scheduleMatches.id,
       kickoffAt: scheduleMatches.kickoffAt,
       fixtureType: scheduleMatches.fixtureType,
       venueName: scheduleMatches.venueName,
@@ -23,6 +24,7 @@ export async function GET() {
   const row = match[0];
   const data = row
     ? {
+        scheduleId: row.scheduleId,
         opponent: row.opponentName,
         kickoffAtUtc: row.kickoffAt.toISOString(),
         venueLabel:

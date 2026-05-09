@@ -4,6 +4,10 @@ import { scheduleMatches } from "@/db/schema";
 import type { ScheduleCreateRequest } from "@/lib/api/contracts/schedule";
 import type { ListQuery } from "@/lib/api/contracts/common";
 import type { MatchStatus, ScheduleMatch } from "@/lib/data/schedule";
+import {
+  getLineupSlotCountsByScheduleMatchIds,
+  LINEUP_COMPLETE_MIN_SLOTS,
+} from "@/lib/repositories/lineups.repository";
 import { getTeamById } from "@/lib/repositories/teams.repository";
 
 type ListScheduleInput = ListQuery & {
@@ -31,6 +35,7 @@ function formatMonthLabel(date: Date) {
 function toScheduleMatch(
   row: typeof scheduleMatches.$inferSelect,
   team: { name: string; logo: string; venueMapUrl: string },
+  isLineUpCreated: boolean,
 ): ScheduleMatch {
   const isHomeFixture = row.fixtureType === "home";
   const time = row.kickoffTime?.trim() ? row.kickoffTime : undefined;
@@ -56,6 +61,7 @@ function toScheduleMatch(
     venueName: row.venueName ?? (isHomeFixture ? "Home Ground" : team.name),
     venueAddress: row.venueAddress ?? team.venueMapUrl,
     bannerImage: team.logo.replace("w=100", "w=1200"),
+    isLineUpCreated,
   };
 }
 
@@ -84,13 +90,19 @@ export async function listScheduleMatches(input: ListScheduleInput) {
     teamEntries.filter((entry) => entry[1]).map(([id, team]) => [id, team]),
   );
 
-  const data = rows
+  const baseData = rows
     .map((row) => {
       const team = teamsMap.get(row.opponentTeamId);
       if (!team) return null;
-      return toScheduleMatch(row, team);
+      return toScheduleMatch(row, team, false);
     })
     .filter((item): item is ScheduleMatch => item !== null);
+
+  const slotCounts = await getLineupSlotCountsByScheduleMatchIds(baseData.map((m) => m.id));
+  const data = baseData.map((match) => ({
+    ...match,
+    isLineUpCreated: (slotCounts.get(match.id) ?? 0) >= LINEUP_COMPLETE_MIN_SLOTS,
+  }));
 
   return {
     data,
@@ -133,5 +145,28 @@ export async function createScheduleMatch(input: ScheduleCreateRequest) {
     .set({ isActive: false, updatedAt: new Date() })
     .where(ne(scheduleMatches.id, created.id));
 
-  return toScheduleMatch(created, team);
+  return toScheduleMatch(created, team, false);
+}
+
+export async function matchExistsById(matchId: number): Promise<boolean> {
+  const [row] = await db
+    .select({ id: scheduleMatches.id })
+    .from(scheduleMatches)
+    .where(eq(scheduleMatches.id, matchId))
+    .limit(1);
+
+  return row !== undefined;
+}
+
+export async function getScheduleMatchById(id: number): Promise<ScheduleMatch | null> {
+  const [row] = await db.select().from(scheduleMatches).where(eq(scheduleMatches.id, id)).limit(1);
+  if (!row) return null;
+
+  const team = await getTeamById(row.opponentTeamId);
+  if (!team) return null;
+
+  const slotCounts = await getLineupSlotCountsByScheduleMatchIds([id]);
+  const isLineUpCreated = (slotCounts.get(id) ?? 0) >= LINEUP_COMPLETE_MIN_SLOTS;
+
+  return toScheduleMatch(row, team, isLineUpCreated);
 }

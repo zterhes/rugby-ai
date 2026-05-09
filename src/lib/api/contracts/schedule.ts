@@ -24,6 +24,7 @@ export const scheduleMatchSchema = z.object({
   venueName: z.string().optional(),
   venueAddress: z.string().optional(),
   bannerImage: z.string().url().optional(),
+  isLineUpCreated: z.boolean(),
 });
 
 export const scheduleListQuerySchema = listQuerySchema.extend({

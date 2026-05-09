@@ -31,6 +31,12 @@ import {
   dashboardRecentFormResponseSchema,
   dashboardUpcomingMatchResponseSchema,
 } from "@/lib/api/contracts/dashboard";
+import {
+  lineupBootstrapResponseSchema,
+  lineupCreateRequestSchema,
+  lineupCreateResponseSchema,
+  lineupListQuerySchema,
+} from "@/lib/api/contracts/lineups";
 
 const registry = new OpenAPIRegistry();
 
@@ -127,6 +133,36 @@ registry.registerPath({
     400: { description: "Bad request", content: { "application/json": { schema: ApiError } } },
   },
   tags: ["Schedule"],
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/lineups",
+  request: { query: lineupListQuerySchema },
+  responses: {
+    200: {
+      description: "Schedule match + saved lineup slots",
+      content: { "application/json": { schema: lineupBootstrapResponseSchema } },
+    },
+    400: { description: "Bad request", content: { "application/json": { schema: ApiError } } },
+    404: { description: "Match not found", content: { "application/json": { schema: ApiError } } },
+  },
+  tags: ["Lineups"],
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/api/v1/lineups",
+  request: { body: { content: { "application/json": { schema: lineupCreateRequestSchema } } } },
+  responses: {
+    201: {
+      description: "Lineup saved for match",
+      content: { "application/json": { schema: lineupCreateResponseSchema } },
+    },
+    400: { description: "Bad request", content: { "application/json": { schema: ApiError } } },
+    404: { description: "Match not found", content: { "application/json": { schema: ApiError } } },
+  },
+  tags: ["Lineups"],
 });
 
 registry.registerPath({

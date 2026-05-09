@@ -1,9 +1,11 @@
+import Link from "next/link";
 import {
   MdAccessTime,
   MdGroups,
   MdLocationOn,
   MdSportsRugby,
 } from "react-icons/md";
+import { ScheduleLineupStatusBadge } from "@/components/scrum/schedule/schedule-lineup-status-badge";
 import type { ScheduleMatch } from "@/lib/data/schedule";
 
 type ScheduleMatchDetailsProps = {
@@ -55,7 +57,7 @@ export function ScheduleMatchDetails({
                 />
               </div>
               <div>
-                <div className="flex items-center gap-3 mb-1">
+                <div className="flex flex-wrap items-center gap-3 mb-1">
                   <span className="px-2 py-0.5 bg-primary-container/20 text-primary rounded text-[10px] font-bold uppercase tracking-wider border border-primary-container/30">
                     {activeMatch.isHomeFixture
                       ? "Home Fixture"
@@ -64,10 +66,17 @@ export function ScheduleMatchDetails({
                   <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                     {activeMatch.roundLabel ?? "Round"}
                   </span>
+                  <ScheduleLineupStatusBadge isLineUpCreated={activeMatch.isLineUpCreated} />
                 </div>
                 <h2 className="text-2xl font-bold text-on-background">
                   {activeMatch.opponent}
                 </h2>
+                <Link
+                  href={`/line-up/${activeMatch.id}`}
+                  className="mt-3 inline-flex w-fit items-center gap-2 rounded-xl border border-primary-container/40 bg-primary-container/15 px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary transition-colors hover:bg-primary-container/25"
+                >
+                  Open lineup builder
+                </Link>
               </div>
             </div>
           </div>

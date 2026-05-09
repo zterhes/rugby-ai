@@ -29,6 +29,13 @@
       "when": 1778354311352,
       "tag": "0003_legal_romulus",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1778400000000,
+      "tag": "0005_lineup_schedule_match_id",
+      "breakpoints": true
     }
   ]
 }

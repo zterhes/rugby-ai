@@ -1,5 +1,5 @@
 import { rosterSummaryResponseSchema } from "@/lib/api/contracts/roster";
-import { PLAYERS } from "@/lib/data/players";
+import { PLAYERS } from "@/lib/data/players-dashboard-mock";
 import { badRequest, ok } from "@/lib/api/http";
 
 export async function GET() {

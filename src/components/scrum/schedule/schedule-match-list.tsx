@@ -1,3 +1,4 @@
+import { ScheduleLineupStatusBadge } from "@/components/scrum/schedule/schedule-lineup-status-badge";
 import type { ScheduleMatch } from "@/lib/data/schedule";
 
 type GroupedMatches = Record<string, ScheduleMatch[]>;
@@ -71,9 +72,12 @@ function MatchListItem({ match, isSelected, onSelect }: MatchListItemProps) {
           <img src={match.logo} alt={match.opponent} className="w-full h-full object-contain" />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between gap-2 mb-1">
             <h4 className="text-sm font-bold truncate text-on-background">vs {match.opponent}</h4>
-            <span className="text-[10px] font-bold text-muted-foreground">{localDate}</span>
+            <div className="flex items-center gap-2 shrink-0">
+              <ScheduleLineupStatusBadge isLineUpCreated={match.isLineUpCreated} />
+              <span className="text-[10px] font-bold text-muted-foreground">{localDate}</span>
+            </div>
           </div>
           <div className="flex items-center justify-between gap-3">
             <span className="text-[10px] text-muted-foreground truncate">{match.venue}</span>

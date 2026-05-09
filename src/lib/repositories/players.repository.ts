@@ -20,7 +20,7 @@ const POSITION_LABELS: Record<Player["position"], string> = {
   fullback: "Fullback",
 };
 
-function toPlayer(row: typeof players.$inferSelect): Player {
+export function playerRowToContractPlayer(row: typeof players.$inferSelect): Player {
   return {
     id: row.id,
     name: row.name,
@@ -66,7 +66,7 @@ export async function listPlayers(query: PlayersListQuery) {
     .offset((query.page - 1) * query.pageSize);
 
   return {
-    data: data.map(toPlayer),
+    data: data.map(playerRowToContractPlayer),
     meta: {
       total: Number(totalRow?.value ?? 0),
       page: query.page,
@@ -77,7 +77,7 @@ export async function listPlayers(query: PlayersListQuery) {
 
 export async function getPlayerById(id: string): Promise<Player | null> {
   const [row] = await db.select().from(players).where(eq(players.id, id)).limit(1);
-  return row ? toPlayer(row) : null;
+  return row ? playerRowToContractPlayer(row) : null;
 }
 
 export async function createPlayer(input: PlayerCreateRequest): Promise<Player> {
@@ -95,7 +95,7 @@ export async function createPlayer(input: PlayerCreateRequest): Promise<Player> 
     })
     .returning();
 
-  return toPlayer(created);
+  return playerRowToContractPlayer(created);
 }
 
 export async function updatePlayer(
@@ -118,7 +118,7 @@ export async function updatePlayer(
     .where(eq(players.id, id))
     .returning();
 
-  return updated ? toPlayer(updated) : null;
+  return updated ? playerRowToContractPlayer(updated) : null;
 }
 
 export async function setPlayerAvatar(id: string, avatarUrl: string): Promise<Player | null> {
@@ -131,5 +131,5 @@ export async function setPlayerAvatar(id: string, avatarUrl: string): Promise<Pl
     .where(eq(players.id, id))
     .returning();
 
-  return updated ? toPlayer(updated) : null;
+  return updated ? playerRowToContractPlayer(updated) : null;
 }

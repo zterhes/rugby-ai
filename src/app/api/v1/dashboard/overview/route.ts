@@ -1,5 +1,5 @@
 import { dashboardOverviewResponseSchema } from "@/lib/api/contracts/dashboard";
-import { PLAYERS } from "@/lib/data/players";
+import { PLAYERS } from "@/lib/data/players-dashboard-mock";
 import { badRequest, ok } from "@/lib/api/http";
 
 export async function GET() {

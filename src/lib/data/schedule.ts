@@ -25,6 +25,7 @@ export type ScheduleMatch = {
   venueName?: string;
   venueAddress?: string;
   bannerImage?: string;
+  isLineUpCreated: boolean;
 };
 
 export const SCHEDULE_MATCHES: ScheduleMatch[] = [
@@ -48,6 +49,7 @@ export const SCHEDULE_MATCHES: ScheduleMatch[] = [
     venueAddress: "134 Queens Rd, Belfast",
     bannerImage:
       "https://images.unsplash.com/photo-1519861531158-286d644df6ad?auto=format&fit=crop&q=80&w=1200",
+    isLineUpCreated: false,
   },
   {
     id: 2,
@@ -70,6 +72,7 @@ export const SCHEDULE_MATCHES: ScheduleMatch[] = [
     venueAddress: "123 Sports Blvd, Metro District",
     bannerImage:
       "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=1200",
+    isLineUpCreated: false,
   },
   {
     id: 3,
@@ -91,5 +94,6 @@ export const SCHEDULE_MATCHES: ScheduleMatch[] = [
     venueAddress: "7 Falcon Street, Eastborough",
     bannerImage:
       "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=1200",
+    isLineUpCreated: false,
   },
 ];

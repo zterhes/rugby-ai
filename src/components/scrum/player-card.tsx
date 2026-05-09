@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { MdCall, MdEdit, MdMail, MdVisibility } from "react-icons/md";
 import type { Player } from "@/lib/data/players";
+import { resolvePlayerAvatarSrc } from "@/lib/players/resolve-avatar-url";
 
 type PlayerCardProps = {
   player: Player;
@@ -20,18 +21,10 @@ function getInitials(name: string): string {
     .join("");
 }
 
-function resolveAvatarSrc(player: Player) {
-  if (!player.avatarUrl) return undefined;
-  if (player.avatarUrl.includes(".private.blob.vercel-storage.com")) {
-    return `/api/v1/players/${player.id}/avatar`;
-  }
-  return player.avatarUrl;
-}
-
 export function PlayerCard({ player, onView, onEdit }: PlayerCardProps) {
   const isPaid = player.duesStatus === "paid";
   const initials = getInitials(player.name);
-  const avatarSrc = resolveAvatarSrc(player);
+  const avatarSrc = resolvePlayerAvatarSrc(player);
 
   return (
     <article className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-glass-border/40 bg-glass-fill/30 p-glass-padding backdrop-blur-xl transition-all duration-300 hover:border-glass-border hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
