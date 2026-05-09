@@ -26,7 +26,11 @@ import {
   scheduleMatchSchema,
 } from "@/lib/api/contracts/schedule";
 import { rosterSummaryResponseSchema } from "@/lib/api/contracts/roster";
-import { dashboardOverviewResponseSchema } from "@/lib/api/contracts/dashboard";
+import {
+  dashboardOverviewResponseSchema,
+  dashboardRecentFormResponseSchema,
+  dashboardUpcomingMatchResponseSchema,
+} from "@/lib/api/contracts/dashboard";
 
 const registry = new OpenAPIRegistry();
 
@@ -139,6 +143,30 @@ registry.registerPath({
   path: "/api/v1/dashboard/overview",
   responses: {
     200: { description: "Dashboard overview", content: { "application/json": { schema: dashboardOverviewResponseSchema } } },
+  },
+  tags: ["Dashboard"],
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/dashboard/upcoming-matches",
+  responses: {
+    200: {
+      description: "Upcoming matches for dashboard",
+      content: { "application/json": { schema: dashboardUpcomingMatchResponseSchema } },
+    },
+  },
+  tags: ["Dashboard"],
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/dashboard/recent-form",
+  responses: {
+    200: {
+      description: "Recent form list for dashboard",
+      content: { "application/json": { schema: dashboardRecentFormResponseSchema } },
+    },
   },
   tags: ["Dashboard"],
 });

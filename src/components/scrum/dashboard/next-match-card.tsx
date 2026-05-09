@@ -3,10 +3,22 @@ import type { DashboardNextMatch } from "@/components/scrum/dashboard/dashboard-
 
 type NextMatchCardProps = {
   isLoading: boolean;
-  nextMatch: DashboardNextMatch;
+  upcomingMatch: DashboardNextMatch;
 };
 
-export function NextMatchCard({ isLoading, nextMatch }: NextMatchCardProps) {
+export function NextMatchCard({ isLoading, upcomingMatch }: NextMatchCardProps) {
+  const nextMatch = upcomingMatch;
+  const noUpcomingMatches = !isLoading && !upcomingMatch;
+  const localDateTimeLabel = nextMatch
+    ? new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(new Date(nextMatch.kickoffAtUtc))
+    : null;
+
   return (
     <article className="lg:col-span-2 relative overflow-hidden rounded-xl border border-glass-border/30 shadow-2xl backdrop-blur-xl bg-glass-fill/40 flex flex-col group">
       <div className="absolute inset-0 z-0">
@@ -29,7 +41,7 @@ export function NextMatchCard({ isLoading, nextMatch }: NextMatchCardProps) {
           </span>
           <span className="font-body-ui text-muted-foreground flex items-center gap-1">
             <MdCalendarToday className="text-base shrink-0" aria-hidden />
-            {isLoading ? "Loading..." : nextMatch?.dateTimeLabel ?? "No upcoming match"}
+            {isLoading ? "Loading..." : localDateTimeLabel ?? "there is no upcoming matches"}
           </span>
         </div>
 
@@ -41,13 +53,17 @@ export function NextMatchCard({ isLoading, nextMatch }: NextMatchCardProps) {
           <h2 className="font-display-title text-4xl md:text-5xl text-on-surface mb-6 leading-tight">
             {nextMatch?.opponent ?? "TBD"}
           </h2>
-          <button
-            type="button"
-            className="bg-primary-container text-on-primary-container hover:bg-primary-container/80 transition-all duration-300 active:scale-95 py-3 px-6 rounded-full font-label flex items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_25px_rgba(220,38,38,0.5)]"
-          >
-            <MdSportsRugby className="text-lg shrink-0" aria-hidden />
-            Build Lineup
-          </button>
+          {noUpcomingMatches ? (
+            <p className="font-body-ui text-muted-foreground">there is no upcoming matches</p>
+          ) : (
+            <button
+              type="button"
+              className="bg-primary-container text-on-primary-container hover:bg-primary-container/80 transition-all duration-300 active:scale-95 py-3 px-6 rounded-full font-label flex items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_25px_rgba(220,38,38,0.5)]"
+            >
+              <MdSportsRugby className="text-lg shrink-0" aria-hidden />
+              Build Lineup
+            </button>
+          )}
         </div>
       </div>
     </article>

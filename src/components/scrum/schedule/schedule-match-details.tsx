@@ -1,11 +1,41 @@
-import { MdAccessTime, MdGroups, MdLocationOn, MdSportsRugby } from "react-icons/md";
+import {
+  MdAccessTime,
+  MdGroups,
+  MdLocationOn,
+  MdSportsRugby,
+} from "react-icons/md";
 import type { ScheduleMatch } from "@/lib/data/schedule";
 
 type ScheduleMatchDetailsProps = {
   activeMatch: ScheduleMatch | null;
 };
 
-export function ScheduleMatchDetails({ activeMatch }: ScheduleMatchDetailsProps) {
+function formatLocalKickoffDate(kickoffAtUtc: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  }).format(new Date(kickoffAtUtc));
+}
+
+function formatLocalKickoffTime(kickoffAtUtc: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(kickoffAtUtc));
+}
+
+export function ScheduleMatchDetails({
+  activeMatch,
+}: ScheduleMatchDetailsProps) {
+  const localKickoffTime = activeMatch
+    ? formatLocalKickoffTime(activeMatch.kickoffAtUtc)
+    : "TBD";
+  const localKickoffDate = activeMatch
+    ? formatLocalKickoffDate(activeMatch.kickoffAtUtc)
+    : "TBD";
+
   return (
     <div className="xl:col-span-8">
       {activeMatch ? (
@@ -27,13 +57,17 @@ export function ScheduleMatchDetails({ activeMatch }: ScheduleMatchDetailsProps)
               <div>
                 <div className="flex items-center gap-3 mb-1">
                   <span className="px-2 py-0.5 bg-primary-container/20 text-primary rounded text-[10px] font-bold uppercase tracking-wider border border-primary-container/30">
-                    {activeMatch.isHomeFixture ? "Home Fixture" : "Away Fixture"}
+                    {activeMatch.isHomeFixture
+                      ? "Home Fixture"
+                      : "Away Fixture"}
                   </span>
                   <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
                     {activeMatch.roundLabel ?? "Round"}
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold text-on-background">{activeMatch.opponent}</h2>
+                <h2 className="text-2xl font-bold text-on-background">
+                  {activeMatch.opponent}
+                </h2>
               </div>
             </div>
           </div>
@@ -42,8 +76,8 @@ export function ScheduleMatchDetails({ activeMatch }: ScheduleMatchDetailsProps)
             <DetailInfoCard
               icon={MdAccessTime}
               label="KICK-OFF"
-              value={activeMatch.time ?? "TBD"}
-              subValue={activeMatch.date}
+              value={localKickoffTime}
+              subValue={localKickoffDate}
             />
             <DetailInfoCard
               icon={MdGroups}
@@ -56,7 +90,9 @@ export function ScheduleMatchDetails({ activeMatch }: ScheduleMatchDetailsProps)
               label="KIT"
               value={activeMatch.kitPrimary ?? "TBD"}
               subValue={activeMatch.kitSecondary ?? "TBD"}
-              customContent={<div className="w-3 h-3 rounded-full bg-primary mt-1" />}
+              customContent={
+                <div className="w-3 h-3 rounded-full bg-primary mt-1" />
+              }
             />
           </div>
 
@@ -66,8 +102,12 @@ export function ScheduleMatchDetails({ activeMatch }: ScheduleMatchDetailsProps)
                 <MdLocationOn className="w-5 h-5 text-primary" aria-hidden />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-on-background">{activeMatch.venueName ?? "Venue"}</h4>
-                <p className="text-xs text-muted-foreground">{activeMatch.venueAddress ?? "Address TBD"}</p>
+                <h4 className="text-sm font-bold text-on-background">
+                  {activeMatch.venueName ?? "Venue"}
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  {activeMatch.venueAddress ?? "Address TBD"}
+                </p>
               </div>
             </div>
           </div>
@@ -85,18 +125,28 @@ type DetailInfoCardProps = {
   customContent?: React.ReactNode;
 };
 
-function DetailInfoCard({ icon: Icon, label, value, subValue, customContent }: DetailInfoCardProps) {
+function DetailInfoCard({
+  icon: Icon,
+  label,
+  value,
+  subValue,
+  customContent,
+}: DetailInfoCardProps) {
   return (
     <div className="bg-background p-5 rounded-2xl border border-white/5">
       <div className="flex items-center gap-2 mb-3">
         <Icon className="w-3.5 h-3.5 text-muted-foreground" aria-hidden />
-        <span className="text-[9px] font-black tracking-widest text-muted-foreground uppercase">{label}</span>
+        <span className="text-[9px] font-black tracking-widest text-muted-foreground uppercase">
+          {label}
+        </span>
       </div>
       <div className="flex items-center gap-3">
         <span className="text-xl font-bold text-on-background">{value}</span>
         {customContent}
       </div>
-      <p className="text-[10px] text-muted-foreground font-medium mt-1">{subValue}</p>
+      <p className="text-[10px] text-muted-foreground font-medium mt-1">
+        {subValue}
+      </p>
     </div>
   );
 }

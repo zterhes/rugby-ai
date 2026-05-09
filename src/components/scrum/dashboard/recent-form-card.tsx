@@ -15,7 +15,10 @@ export function RecentFormCard({ results }: RecentFormCardProps) {
           <MdHistory className="text-secondary text-xl shrink-0" aria-hidden />
           Recent Form
         </h3>
-        <Link href="/roster" className="font-label text-primary hover:text-primary-fixed transition-colors">
+        <Link
+          href="/schedule"
+          className="font-label text-primary hover:text-primary-fixed transition-colors"
+        >
           View All
         </Link>
       </div>

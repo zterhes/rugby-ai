@@ -11,16 +11,16 @@ import { QuickActionsCard } from "@/components/scrum/dashboard/quick-actions-car
 import { RecentFormCard } from "@/components/scrum/dashboard/recent-form-card";
 
 type DashboardPageViewProps = {
-  isLoading: boolean;
-  nextMatch: DashboardNextMatch;
+  isUpcomingLoading: boolean;
+  upcomingMatch: DashboardNextMatch;
   dues: DashboardDues | undefined;
   recentResults: DashboardRecentResult[];
   quickActions: DashboardQuickAction[];
 };
 
 export function DashboardPageView({
-  isLoading,
-  nextMatch,
+  isUpcomingLoading,
+  upcomingMatch,
   dues,
   recentResults,
   quickActions,
@@ -37,7 +37,7 @@ export function DashboardPageView({
           />
 
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <NextMatchCard isLoading={isLoading} nextMatch={nextMatch} />
+            <NextMatchCard isLoading={isUpcomingLoading} upcomingMatch={upcomingMatch} />
             <DuesCard dues={dues} />
             <RecentFormCard results={recentResults} />
             <QuickActionsCard quickActions={quickActions} />

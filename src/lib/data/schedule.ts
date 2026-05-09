@@ -6,6 +6,7 @@ export type MatchStatus = "Final" | "Upcoming";
 
 export type ScheduleMatch = {
   id: number;
+  kickoffAtUtc: string;
   opponent: string;
   date: string;
   monthLabel: string;
@@ -29,6 +30,7 @@ export type ScheduleMatch = {
 export const SCHEDULE_MATCHES: ScheduleMatch[] = [
   {
     id: 1,
+    kickoffAtUtc: "2023-10-14T13:30:00.000Z",
     opponent: "Northern Knights",
     date: "Oct 14",
     monthLabel: "October 2023",
@@ -49,6 +51,7 @@ export const SCHEDULE_MATCHES: ScheduleMatch[] = [
   },
   {
     id: 2,
+    kickoffAtUtc: "2023-11-04T15:00:00.000Z",
     opponent: "Western Wolves",
     date: "Nov 04",
     monthLabel: "November 2023",
@@ -70,6 +73,7 @@ export const SCHEDULE_MATCHES: ScheduleMatch[] = [
   },
   {
     id: 3,
+    kickoffAtUtc: "2023-11-18T12:00:00.000Z",
     opponent: "Eastern Eagles",
     date: "Nov 18",
     monthLabel: "November 2023",

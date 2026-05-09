@@ -42,7 +42,24 @@ type MatchListItemProps = {
   onSelect: (matchId: number) => void;
 };
 
+function formatLocalMatchDate(kickoffAtUtc: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "2-digit",
+  }).format(new Date(kickoffAtUtc));
+}
+
+function formatLocalMatchTime(kickoffAtUtc: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(kickoffAtUtc));
+}
+
 function MatchListItem({ match, isSelected, onSelect }: MatchListItemProps) {
+  const localDate = formatLocalMatchDate(match.kickoffAtUtc);
+  const localTime = formatLocalMatchTime(match.kickoffAtUtc);
+
   return (
     <button
       type="button"
@@ -56,14 +73,14 @@ function MatchListItem({ match, isSelected, onSelect }: MatchListItemProps) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1">
             <h4 className="text-sm font-bold truncate text-on-background">vs {match.opponent}</h4>
-            <span className="text-[10px] font-bold text-muted-foreground">{match.date}</span>
+            <span className="text-[10px] font-bold text-muted-foreground">{localDate}</span>
           </div>
           <div className="flex items-center justify-between gap-3">
             <span className="text-[10px] text-muted-foreground truncate">{match.venue}</span>
             <span
               className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${match.status === "Final" ? "bg-white/5 text-muted-foreground" : "bg-primary-container/20 text-primary"}`}
             >
-              {match.result ?? match.time ?? "TBD"}
+              {match.result ?? localTime}
             </span>
           </div>
         </div>

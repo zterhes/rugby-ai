@@ -38,10 +38,12 @@ export const scheduleMatches = pgTable("schedule_matches", {
     .notNull()
     .references(() => teams.id),
   fixtureType: varchar("fixture_type", { length: 8 }).notNull(),
+  kickoffAt: timestamp("kickoff_at", { withTimezone: true }).notNull(),
   dateIso: varchar("date_iso", { length: 10 }).notNull(),
   kickoffTime: varchar("kickoff_time", { length: 16 }),
   roundLabel: text("round_label"),
   meetTime: varchar("meet_time", { length: 16 }),
+  meetLocation: text("meet_location"),
   kitPrimary: text("kit_primary"),
   kitSecondary: text("kit_secondary"),
   venueName: text("venue_name"),

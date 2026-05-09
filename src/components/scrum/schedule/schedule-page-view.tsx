@@ -17,7 +17,10 @@ import {
 } from "@/components/ui/select";
 import { ScheduleMatchDetails } from "@/components/scrum/schedule/schedule-match-details";
 import { ScheduleMatchList } from "@/components/scrum/schedule/schedule-match-list";
-import type { MatchDraft, TeamDraft } from "@/components/scrum/schedule/schedule-page-container";
+import type {
+  MatchDraft,
+  TeamDraft,
+} from "@/components/scrum/schedule/schedule-page-container";
 import type { ScheduleMatch } from "@/lib/data/schedule";
 import type { Team } from "@/lib/data/teams";
 
@@ -118,13 +121,15 @@ export function SchedulePageView({
             <DialogHeader>
               <DialogTitle>Create New Match</DialogTitle>
               <DialogDescription>
-                Set match details and choose the opponent from backend-loaded teams.
+                Set match details and choose the opponent.
               </DialogDescription>
             </DialogHeader>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Fixture Type</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Fixture Type
+                </label>
                 <Select
                   value={matchDraft.fixtureType}
                   onValueChange={(value) =>
@@ -142,11 +147,15 @@ export function SchedulePageView({
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Opponent Team</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Opponent Team
+                </label>
                 <div className="flex gap-2 mt-1">
                   <Select
                     value={matchDraft.opponentTeamId}
-                    onValueChange={(value) => onMatchDraftChange("opponentTeamId", value)}
+                    onValueChange={(value) =>
+                      onMatchDraftChange("opponentTeamId", value)
+                    }
                     disabled={isTeamsLoading || isTeamsError}
                   >
                     <SelectTrigger className="w-full border-glass-border/50">
@@ -179,59 +188,100 @@ export function SchedulePageView({
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Date</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Date
+                </label>
                 <Input
                   type="date"
                   value={matchDraft.dateIso}
-                  onChange={(event) => onMatchDraftChange("dateIso", event.target.value)}
+                  onChange={(event) =>
+                    onMatchDraftChange("dateIso", event.target.value)
+                  }
                   className="mt-1 border-glass-border/50"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Kick-off</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Kick-off
+                </label>
                 <Input
                   type="time"
                   value={matchDraft.kickoffTime}
-                  onChange={(event) => onMatchDraftChange("kickoffTime", event.target.value)}
+                  onChange={(event) =>
+                    onMatchDraftChange("kickoffTime", event.target.value)
+                  }
                   className="mt-1 border-glass-border/50"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Round</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Round
+                </label>
                 <Input
                   type="text"
                   value={matchDraft.roundLabel}
-                  onChange={(event) => onMatchDraftChange("roundLabel", event.target.value)}
+                  onChange={(event) =>
+                    onMatchDraftChange("roundLabel", event.target.value)
+                  }
                   placeholder="Round 4"
                   className="mt-1 border-glass-border/50"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Meet Time</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Meet Time
+                </label>
                 <Input
                   type="text"
                   value={matchDraft.meetTime}
-                  onChange={(event) => onMatchDraftChange("meetTime", event.target.value)}
+                  onChange={(event) =>
+                    onMatchDraftChange("meetTime", event.target.value)
+                  }
                   placeholder="13:30"
+                  className="mt-1 border-glass-border/50"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Meet Location
+                </label>
+                <Input
+                  type="text"
+                  value={matchDraft.meetLocation}
+                  onChange={(event) =>
+                    onMatchDraftChange("meetLocation", event.target.value)
+                  }
+                  placeholder="Locker room, team bus, …"
                   className="mt-1 border-glass-border/50"
                 />
               </div>
             </div>
 
             <div className="rounded-lg border border-glass-border/50 bg-glass-fill/20 p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Fixed Team Sides</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                Fixed Team Sides
+              </p>
               <div className="grid grid-cols-2 gap-3 items-center">
                 <TeamSideCard
                   label="Left Side"
-                  teamName={isHome ? teamName : selectedOpponent?.name ?? "Select Opponent"}
+                  teamName={
+                    isHome
+                      ? teamName
+                      : (selectedOpponent?.name ?? "Select Opponent")
+                  }
                   logo={isHome ? undefined : selectedOpponent?.logo}
                 />
                 <TeamSideCard
                   label="Right Side"
-                  teamName={isHome ? selectedOpponent?.name ?? "Select Opponent" : teamName}
+                  teamName={
+                    isHome
+                      ? (selectedOpponent?.name ?? "Select Opponent")
+                      : teamName
+                  }
                   logo={isHome ? selectedOpponent?.logo : undefined}
                 />
               </div>
@@ -271,46 +321,61 @@ export function SchedulePageView({
             <DialogHeader>
               <DialogTitle>Add Opponent Team</DialogTitle>
               <DialogDescription>
-                Add a team for the match dropdown. This currently saves as mock backend data.
+                Add a team for the match dropdown. This currently saves as mock
+                backend data.
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Team Name</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Team Name
+                </label>
                 <Input
                   type="text"
                   value={teamDraft.name}
-                  onChange={(event) => onTeamDraftChange("name", event.target.value)}
+                  onChange={(event) =>
+                    onTeamDraftChange("name", event.target.value)
+                  }
                   placeholder="Southern Sharks"
                   className="mt-1 border-glass-border/50"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Logo URL</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Logo URL
+                </label>
                 <Input
                   type="url"
                   value={teamDraft.logo}
-                  onChange={(event) => onTeamDraftChange("logo", event.target.value)}
+                  onChange={(event) =>
+                    onTeamDraftChange("logo", event.target.value)
+                  }
                   placeholder="https://..."
                   className="mt-1 border-glass-border/50"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Google Maps Link</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Google Maps Link
+                </label>
                 <Input
                   type="url"
                   value={teamDraft.venueMapUrl}
-                  onChange={(event) => onTeamDraftChange("venueMapUrl", event.target.value)}
+                  onChange={(event) =>
+                    onTeamDraftChange("venueMapUrl", event.target.value)
+                  }
                   placeholder="https://maps.google.com/..."
                   className="mt-1 border-glass-border/50"
                 />
               </div>
             </div>
 
-            {teamFormError ? <p className="text-sm text-error">{teamFormError}</p> : null}
+            {teamFormError ? (
+              <p className="text-sm text-error">{teamFormError}</p>
+            ) : null}
 
             <DialogFooter>
               <button
@@ -376,10 +441,20 @@ function TeamSideCard({
 }) {
   return (
     <div className="rounded-lg border border-glass-border/50 bg-background/60 p-3">
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">{label}</p>
+      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">
+        {label}
+      </p>
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 rounded-md border border-white/10 bg-surface-elevated overflow-hidden flex items-center justify-center">
-          {logo ? <img src={logo} alt={teamName} className="h-full w-full object-contain" /> : <MdSportsRugby className="text-primary" aria-hidden />}
+          {logo ? (
+            <img
+              src={logo}
+              alt={teamName}
+              className="h-full w-full object-contain"
+            />
+          ) : (
+            <MdSportsRugby className="text-primary" aria-hidden />
+          )}
         </div>
         <p className="text-sm font-semibold text-on-background">{teamName}</p>
       </div>

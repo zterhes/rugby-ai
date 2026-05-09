@@ -10,16 +10,18 @@ type ListScheduleInput = ListQuery & {
   status?: MatchStatus;
 };
 
-function formatDateLabel(dateIso: string) {
-  const date = new Date(`${dateIso}T12:00:00`);
+function formatDateLabel(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "2-digit",
   }).format(date);
 }
 
-function formatMonthLabel(dateIso: string) {
-  const date = new Date(`${dateIso}T12:00:00`);
+function toUtcDateTime(dateIso: string, kickoffTime: string) {
+  return new Date(`${dateIso}T${kickoffTime}:00.000Z`);
+}
+
+function formatMonthLabel(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
@@ -35,9 +37,10 @@ function toScheduleMatch(
 
   return {
     id: row.id,
+    kickoffAtUtc: row.kickoffAt.toISOString(),
     opponent: team.name,
-    date: formatDateLabel(row.dateIso),
-    monthLabel: formatMonthLabel(row.dateIso),
+    date: formatDateLabel(row.kickoffAt),
+    monthLabel: formatMonthLabel(row.kickoffAt),
     venue: `${isHomeFixture ? "Home" : "Away"} • ${isHomeFixture ? (row.venueName ?? "Home Ground") : team.name}`,
     status: row.status as MatchStatus,
     logo: team.logo,
@@ -47,7 +50,7 @@ function toScheduleMatch(
     isHomeFixture,
     roundLabel: row.roundLabel ?? "Round",
     meetTime: row.meetTime ?? "TBD",
-    meetLocation: isHomeFixture ? "Locker Room A" : "Team Bus",
+    meetLocation: row.meetLocation ?? undefined,
     kitPrimary: row.kitPrimary ?? "Primary Red",
     kitSecondary: row.kitSecondary ?? "Black Shorts",
     venueName: row.venueName ?? (isHomeFixture ? "Home Ground" : team.name),
@@ -69,7 +72,7 @@ export async function listScheduleMatches(input: ListScheduleInput) {
     .select()
     .from(scheduleMatches)
     .where(whereClause)
-    .orderBy(desc(scheduleMatches.dateIso), asc(scheduleMatches.id))
+    .orderBy(desc(scheduleMatches.kickoffAt), asc(scheduleMatches.id))
     .limit(input.pageSize)
     .offset((input.page - 1) * input.pageSize);
 
@@ -103,15 +106,19 @@ export async function createScheduleMatch(input: ScheduleCreateRequest) {
   const team = await getTeamById(input.opponentTeamId);
   if (!team) return null;
 
+  const kickoffAtUtc = toUtcDateTime(input.dateIso, input.kickoffTime);
+
   const [created] = await db
     .insert(scheduleMatches)
     .values({
       opponentTeamId: input.opponentTeamId,
       fixtureType: input.fixtureType,
+      kickoffAt: kickoffAtUtc,
       dateIso: input.dateIso,
-      kickoffTime: input.kickoffTime?.trim() || null,
+      kickoffTime: input.kickoffTime.trim(),
       roundLabel: input.roundLabel?.trim() || null,
       meetTime: input.meetTime?.trim() || null,
+      meetLocation: input.meetLocation.trim(),
       kitPrimary: input.kitPrimary?.trim() || null,
       kitSecondary: input.kitSecondary?.trim() || null,
       venueName: input.venueName?.trim() || null,

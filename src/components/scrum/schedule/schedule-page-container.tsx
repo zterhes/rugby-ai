@@ -24,6 +24,7 @@ export type MatchDraft = {
   kickoffTime: string;
   roundLabel: string;
   meetTime: string;
+  meetLocation: string;
   kitPrimary: string;
   kitSecondary: string;
 };
@@ -34,6 +35,13 @@ export type TeamDraft = {
   venueMapUrl: string;
 };
 
+function getLocalMonthLabel(kickoffAtUtc: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(kickoffAtUtc));
+}
+
 const DEFAULT_MATCH_DRAFT: MatchDraft = {
   fixtureType: "home",
   opponentTeamId: "",
@@ -41,6 +49,7 @@ const DEFAULT_MATCH_DRAFT: MatchDraft = {
   kickoffTime: "",
   roundLabel: "",
   meetTime: "",
+  meetLocation: "",
   kitPrimary: "Primary Red",
   kitSecondary: "Black Shorts",
 };
@@ -120,10 +129,11 @@ export function SchedulePageContainer() {
 
   const groupedMatches = useMemo(() => {
     return matches.reduce<Record<string, typeof matches>>((acc, match) => {
-      if (!acc[match.monthLabel]) {
-        acc[match.monthLabel] = [];
+      const monthLabel = getLocalMonthLabel(match.kickoffAtUtc);
+      if (!acc[monthLabel]) {
+        acc[monthLabel] = [];
       }
-      acc[match.monthLabel].push(match);
+      acc[monthLabel].push(match);
       return acc;
     }, {});
   }, [matches]);
@@ -168,8 +178,15 @@ export function SchedulePageContainer() {
   };
 
   const handleCreateMatch = async () => {
-    if (!matchDraft.opponentTeamId || !matchDraft.dateIso) {
-      setMatchFormError("Please select opponent team and date.");
+    if (
+      !matchDraft.opponentTeamId ||
+      !matchDraft.dateIso ||
+      !matchDraft.kickoffTime ||
+      !matchDraft.meetLocation.trim()
+    ) {
+      setMatchFormError(
+        "Please select opponent team, date, kick-off time, and meet location.",
+      );
       return;
     }
 
@@ -186,6 +203,7 @@ export function SchedulePageContainer() {
       kickoffTime: matchDraft.kickoffTime,
       roundLabel: matchDraft.roundLabel,
       meetTime: matchDraft.meetTime,
+      meetLocation: matchDraft.meetLocation.trim(),
       kitPrimary: matchDraft.kitPrimary,
       kitSecondary: matchDraft.kitSecondary,
     };
