@@ -1,0 +1,1 @@
+ALTER TABLE "schedule_matches" ADD COLUMN "meet_location" text;

@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1778020809057,
+      "tag": "0000_mature_kinsey_walden",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778022545209,
+      "tag": "0001_faulty_nehzno",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778353595630,
+      "tag": "0002_productive_mach_iv",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778354311352,
+      "tag": "0003_legal_romulus",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1778400000000,
+      "tag": "0005_lineup_schedule_match_id",
+      "breakpoints": true
+    }
+  ]
+}

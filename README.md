@@ -31,18 +31,14 @@ Create a `.env.local` file in the root directory with the following variables:
 ```env
 GOOGLE_AI_API_KEY=your_google_ai_api_key
 TEAM_NAME=your_team_name
-API_TEMPLATE_IO_URL=your_api_template_io_url
-API_TEMPLATE_IO_API_KEY=your_api_template_io_key
-API_TEMPLATE_IO_ROSTER_STORY_ID=your_roster_story_id
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
 ```
 
 **Required environment variables:**
 
 - `GOOGLE_AI_API_KEY` - API key for Google AI services
 - `TEAM_NAME` - Your rugby team name
-- `API_TEMPLATE_IO_URL` - URL for API Template IO service
-- `API_TEMPLATE_IO_API_KEY` - API key for template generation
-- `API_TEMPLATE_IO_ROSTER_STORY_ID` - Template ID for roster images
+- `BLOB_READ_WRITE_TOKEN` - Vercel Blob read/write token for image uploads
 
 4. **Start the development server**
 
@@ -57,7 +53,7 @@ Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 ## Features
 
 - AI-powered chat interface for rugby team management
-- Roster image generation
+- Multi-flow image generation (lineup/result x story/post)
 - Real-time AI responses with streaming
 - Modern UI with Radix UI components
 
@@ -86,3 +82,32 @@ rugby-ai/
 - `pnpm build` - Build for production
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
+
+## API Contract (v1)
+
+The project now exposes REST-style API contract endpoints under `src/app/api/v1` using Next.js Route Handlers.
+
+### Contract schemas
+
+All contract schemas are defined in:
+
+- `src/lib/api/contracts/common.ts`
+- `src/lib/api/contracts/players.ts`
+- `src/lib/api/contracts/teams.ts`
+- `src/lib/api/contracts/schedule.ts`
+- `src/lib/api/contracts/roster.ts`
+- `src/lib/api/contracts/dashboard.ts`
+
+### OpenAPI generation
+
+OpenAPI is generated from the Zod contracts in `src/lib/api/openapi.ts` and exposed at:
+
+- `GET /api/v1/openapi.json`
+
+### API docs UI
+
+Scalar docs page is available at:
+
+- `/api-docs`
+
+This page loads the generated OpenAPI document from `/api/v1/openapi.json`.

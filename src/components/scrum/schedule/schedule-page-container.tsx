@@ -1,0 +1,259 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { SchedulePageView } from "@/components/scrum/schedule/schedule-page-view";
+import {
+  createScheduleMatch,
+  getScheduleMatches,
+  SCHEDULE_MATCHES_QUERY_KEY,
+  type CreateScheduleMatchInput,
+} from "@/lib/data/schedule-query";
+import {
+  createTeam,
+  getTeams,
+  TEAMS_QUERY_KEY,
+  type CreateTeamInput,
+} from "@/lib/data/teams-query";
+
+export type MatchDraft = {
+  fixtureType: "home" | "away";
+  opponentTeamId: string;
+  dateIso: string;
+  kickoffTime: string;
+  roundLabel: string;
+  meetTime: string;
+  meetLocation: string;
+  kitPrimary: string;
+  kitSecondary: string;
+};
+
+export type TeamDraft = {
+  name: string;
+  logo: string;
+  venueMapUrl: string;
+};
+
+function getLocalMonthLabel(kickoffAtUtc: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(kickoffAtUtc));
+}
+
+const DEFAULT_MATCH_DRAFT: MatchDraft = {
+  fixtureType: "home",
+  opponentTeamId: "",
+  dateIso: "",
+  kickoffTime: "",
+  roundLabel: "",
+  meetTime: "",
+  meetLocation: "",
+  kitPrimary: "Primary Red",
+  kitSecondary: "Black Shorts",
+};
+
+const DEFAULT_TEAM_DRAFT: TeamDraft = {
+  name: "",
+  logo: "",
+  venueMapUrl: "",
+};
+
+export function SchedulePageContainer() {
+  const queryClient = useQueryClient();
+  const [selectedMatchId, setSelectedMatchId] = useState<number | null>(null);
+  const [isCreateMatchOpen, setIsCreateMatchOpen] = useState(false);
+  const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false);
+  const [matchDraft, setMatchDraft] = useState<MatchDraft>(DEFAULT_MATCH_DRAFT);
+  const [teamDraft, setTeamDraft] = useState<TeamDraft>(DEFAULT_TEAM_DRAFT);
+  const [matchFormError, setMatchFormError] = useState<string | null>(null);
+  const [teamFormError, setTeamFormError] = useState<string | null>(null);
+
+  const {
+    data: matchesData,
+    isLoading: isMatchesLoading,
+    isError: isMatchesError,
+  } = useQuery({
+    queryKey: SCHEDULE_MATCHES_QUERY_KEY,
+    queryFn: () => getScheduleMatches(),
+  });
+
+  const {
+    data: teamsData,
+    isLoading: isTeamsLoading,
+    isError: isTeamsError,
+  } = useQuery({
+    queryKey: TEAMS_QUERY_KEY,
+    queryFn: () => getTeams(),
+  });
+
+  const createMatchMutation = useMutation({
+    mutationFn: createScheduleMatch,
+    onSuccess: async (created) => {
+      await queryClient.invalidateQueries({ queryKey: SCHEDULE_MATCHES_QUERY_KEY });
+      setSelectedMatchId(created.id);
+      setIsCreateMatchOpen(false);
+      setMatchDraft(DEFAULT_MATCH_DRAFT);
+      setMatchFormError(null);
+      toast.success("Match created successfully.");
+    },
+    onError: (error) => {
+      const message =
+        error instanceof Error ? error.message : "Could not create match. Please try again.";
+      setMatchFormError(message);
+      toast.error(message);
+    },
+  });
+
+  const createTeamMutation = useMutation({
+    mutationFn: createTeam,
+    onSuccess: async (created) => {
+      await queryClient.invalidateQueries({ queryKey: TEAMS_QUERY_KEY });
+      setMatchDraft((previous) => ({ ...previous, opponentTeamId: created.id }));
+      setTeamDraft(DEFAULT_TEAM_DRAFT);
+      setTeamFormError(null);
+      setIsCreateTeamOpen(false);
+      toast.success("Team added successfully.");
+    },
+    onError: (error) => {
+      const message =
+        error instanceof Error ? error.message : "Could not add team. Please try again.";
+      setTeamFormError(message);
+      toast.error(message);
+    },
+  });
+
+  const matches = useMemo(() => matchesData ?? [], [matchesData]);
+  const teams = useMemo(() => teamsData ?? [], [teamsData]);
+
+  const groupedMatches = useMemo(() => {
+    return matches.reduce<Record<string, typeof matches>>((acc, match) => {
+      const monthLabel = getLocalMonthLabel(match.kickoffAtUtc);
+      if (!acc[monthLabel]) {
+        acc[monthLabel] = [];
+      }
+      acc[monthLabel].push(match);
+      return acc;
+    }, {});
+  }, [matches]);
+
+  const activeMatch = useMemo(() => {
+    if (!matches.length) return null;
+    if (selectedMatchId === null) {
+      return matches.find((match) => match.isActive) ?? matches[0];
+    }
+    return matches.find((match) => match.id === selectedMatchId) ?? matches[0];
+  }, [matches, selectedMatchId]);
+
+  const effectiveSelectedMatchId = activeMatch?.id ?? null;
+
+  const selectedOpponent = useMemo(() => {
+    return teams.find((team) => team.id === matchDraft.opponentTeamId) ?? null;
+  }, [teams, matchDraft.opponentTeamId]);
+
+  const handleOpenCreateMatch = () => {
+    setIsCreateMatchOpen(true);
+    setMatchFormError(null);
+  };
+
+  const handleMatchDraftChange = <K extends keyof MatchDraft>(
+    key: K,
+    value: MatchDraft[K],
+  ) => {
+    setMatchDraft((previous) => ({ ...previous, [key]: value }));
+    if (matchFormError) {
+      setMatchFormError(null);
+    }
+  };
+
+  const handleTeamDraftChange = <K extends keyof TeamDraft>(
+    key: K,
+    value: TeamDraft[K],
+  ) => {
+    setTeamDraft((previous) => ({ ...previous, [key]: value }));
+    if (teamFormError) {
+      setTeamFormError(null);
+    }
+  };
+
+  const handleCreateMatch = async () => {
+    if (
+      !matchDraft.opponentTeamId ||
+      !matchDraft.dateIso ||
+      !matchDraft.kickoffTime ||
+      !matchDraft.meetLocation.trim()
+    ) {
+      setMatchFormError(
+        "Please select opponent team, date, kick-off time, and meet location.",
+      );
+      return;
+    }
+
+    const opponentTeam = teams.find((team) => team.id === matchDraft.opponentTeamId);
+    if (!opponentTeam) {
+      setMatchFormError("Selected opponent team is not available.");
+      return;
+    }
+
+    const payload: CreateScheduleMatchInput = {
+      fixtureType: matchDraft.fixtureType,
+      opponentTeamId: matchDraft.opponentTeamId,
+      dateIso: matchDraft.dateIso,
+      kickoffTime: matchDraft.kickoffTime,
+      roundLabel: matchDraft.roundLabel,
+      meetTime: matchDraft.meetTime,
+      meetLocation: matchDraft.meetLocation.trim(),
+      kitPrimary: matchDraft.kitPrimary,
+      kitSecondary: matchDraft.kitSecondary,
+    };
+
+    await createMatchMutation.mutateAsync(payload);
+  };
+
+  const handleCreateTeam = async () => {
+    if (!teamDraft.name.trim() || !teamDraft.logo.trim() || !teamDraft.venueMapUrl.trim()) {
+      setTeamFormError("Please fill in team name, logo URL, and Google Maps link.");
+      return;
+    }
+
+    const payload: CreateTeamInput = {
+      name: teamDraft.name,
+      logo: teamDraft.logo,
+      venueMapUrl: teamDraft.venueMapUrl,
+    };
+
+    await createTeamMutation.mutateAsync(payload);
+  };
+
+  return (
+    <SchedulePageView
+      groupedMatches={groupedMatches}
+      activeMatch={activeMatch}
+      selectedMatchId={effectiveSelectedMatchId}
+      isLoading={isMatchesLoading}
+      isError={isMatchesError}
+      onSelectMatch={setSelectedMatchId}
+      teamName={process.env.NEXT_PUBLIC_TEAM_NAME ?? "First XV"}
+      teams={teams}
+      isTeamsLoading={isTeamsLoading}
+      isTeamsError={isTeamsError}
+      matchDraft={matchDraft}
+      teamDraft={teamDraft}
+      selectedOpponent={selectedOpponent}
+      isCreateMatchOpen={isCreateMatchOpen}
+      isCreateTeamOpen={isCreateTeamOpen}
+      matchFormError={matchFormError}
+      teamFormError={teamFormError}
+      isCreatingMatch={createMatchMutation.isPending}
+      isCreatingTeam={createTeamMutation.isPending}
+      onOpenCreateMatch={handleOpenCreateMatch}
+      onCreateMatchOpenChange={setIsCreateMatchOpen}
+      onCreateTeamOpenChange={setIsCreateTeamOpen}
+      onMatchDraftChange={handleMatchDraftChange}
+      onTeamDraftChange={handleTeamDraftChange}
+      onCreateMatch={handleCreateMatch}
+      onCreateTeam={handleCreateTeam}
+    />
+  );
+}

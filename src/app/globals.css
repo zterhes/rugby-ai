@@ -1,197 +1,215 @@
 @import "tailwindcss";
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* =====================================================================
+   ScrumMaster – design system (Tailwind v4 `@theme`)
+   ---------------------------------------------------------------------
+   All design tokens (colors, fonts, font sizes, spacing, radius) are
+   declared here. Tailwind v4 generates utilities from these tokens,
+   e.g. `--color-glass-fill` -> `bg-glass-fill`, `text-glass-fill`, etc.
+   ===================================================================== */
+@theme {
+  /* ---------- Colors -------------------------------------------------- */
+  --color-background: #14181f;
+  --color-foreground: #f1f2f4;
+  --color-on-background: #fbdbd7;
 
-@layer base {
-  :root {
-    --background: 220 20% 10%;
-    --foreground: 220 10% 95%;
+  --color-surface: #1d222a;
+  --color-surface-dim: #1f0f0d;
+  --color-surface-bright: #493432;
+  --color-surface-elevated: #272c35;
+  --color-surface-variant: #44302e;
+  --color-surface-tint: #ffb4ab;
 
-    --card: 220 18% 14%;
-    --card-foreground: 220 10% 95%;
+  --color-surface-container-lowest: #190a08;
+  --color-surface-container-low: #281715;
+  --color-surface-container: #2d1b19;
+  --color-surface-container-high: #382523;
+  --color-surface-container-highest: #44302e;
 
-    --popover: 220 18% 14%;
-    --popover-foreground: 220 10% 95%;
+  --color-glass-fill: #212630;
+  --color-glass-border: #5c6370;
 
-    --primary: 0 85% 55%;
-    --primary-foreground: 0 0% 100%;
+  --color-primary: #ffb4ab;
+  --color-primary-fixed: #ffdad6;
+  --color-primary-fixed-dim: #ffb4ab;
+  --color-primary-container: #dc2626;
+  --color-on-primary: #690005;
+  --color-on-primary-container: #fff6f5;
+  --color-on-primary-fixed: #410002;
+  --color-on-primary-fixed-variant: #93000b;
+  --color-inverse-primary: #bf0715;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 220 10% 95%;
+  --color-secondary: #c2c6d4;
+  --color-secondary-container: #444955;
+  --color-secondary-fixed: #dee2f1;
+  --color-secondary-fixed-dim: #c2c6d4;
+  --color-on-secondary: #2b303b;
+  --color-on-secondary-container: #b4b8c6;
+  --color-on-secondary-fixed: #171c26;
+  --color-on-secondary-fixed-variant: #424752;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 220 10% 60%;
+  --color-tertiary: #90cdff;
+  --color-tertiary-container: #0078b2;
+  --color-tertiary-fixed: #cbe6ff;
+  --color-tertiary-fixed-dim: #90cdff;
+  --color-on-tertiary: #003450;
+  --color-on-tertiary-container: #f3f8ff;
+  --color-on-tertiary-fixed: #001e30;
+  --color-on-tertiary-fixed-variant: #004b71;
 
-    --accent: 0 85% 55%;
-    --accent-foreground: 0 0% 100%;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+  --color-destructive: #cf3030;
 
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
+  --color-on-surface: #fbdbd7;
+  --color-on-surface-variant: #e6bdb8;
+  --color-inverse-surface: #fbdbd7;
+  --color-inverse-on-surface: #3f2c29;
 
-    --border: 220 15% 22%;
-    --input: 220 15% 22%;
-    --ring: 0 85% 55%;
+  --color-outline: #ac8884;
+  --color-outline-variant: #5c403c;
+  --color-border: #303541;
+  --color-muted-foreground: #8f96a3;
 
-    --radius: 1rem;
+  --color-user-bubble-fill: #3a2528;
+  --color-user-bubble-border: #6b3e42;
+  --color-assistant-bubble-fill: #2a303a;
+  --color-assistant-bubble-border: #3d4654;
 
-    /* Glassmorphism tokens */
-    --glass-bg: 220 18% 16% / 0.5;
-    --glass-border: 220 15% 100% / 0.1;
-    --glass-shadow: 0 85% 55% / 0.3;
-    
-    /* Gradients */
-    --gradient-start: 220 20% 8%;
-    --gradient-mid: 0 30% 12%;
-    --gradient-end: 220 20% 10%;
+  --color-sidebar-surface: #191d24;
+  --color-gradient-start: #101318;
+  --color-gradient-mid: #281515;
+  --color-gradient-end: #14181f;
 
-    --sidebar-background: 220 18% 12%;
-    --sidebar-foreground: 220 10% 90%;
-    --sidebar-primary: 0 85% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 220 10% 90%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 0 85% 55%;
-  }
+  /* ---------- Fonts --------------------------------------------------- */
+  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-body-ui: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-label: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-subtitle: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-subtitle-xs: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-display-title: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-display-title-sm: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-display-title-xs: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-code: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  .dark {
-    --background: 220 20% 10%;
-    --foreground: 220 10% 95%;
+  /* ---------- Font sizes (with line-height / weight / tracking) ------- */
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-body--font-weight: 400;
 
-    --card: 220 18% 14%;
-    --card-foreground: 220 10% 95%;
+  --text-body-ui: 14px;
+  --text-body-ui--line-height: 20px;
+  --text-body-ui--font-weight: 500;
 
-    --popover: 220 18% 14%;
-    --popover-foreground: 220 10% 95%;
+  --text-subtitle: 14px;
+  --text-subtitle--line-height: 20px;
+  --text-subtitle--font-weight: 400;
 
-    --primary: 0 85% 55%;
-    --primary-foreground: 0 0% 100%;
+  --text-subtitle-xs: 12px;
+  --text-subtitle-xs--line-height: 16px;
+  --text-subtitle-xs--font-weight: 400;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 220 10% 95%;
+  --text-label: 12px;
+  --text-label--line-height: 16px;
+  --text-label--letter-spacing: 0.02em;
+  --text-label--font-weight: 600;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 220 10% 60%;
+  --text-code: 13px;
+  --text-code--line-height: 20px;
+  --text-code--font-weight: 400;
 
-    --accent: 0 85% 55%;
-    --accent-foreground: 0 0% 100%;
+  --text-display-title: 24px;
+  --text-display-title--line-height: 32px;
+  --text-display-title--letter-spacing: -0.02em;
+  --text-display-title--font-weight: 700;
 
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
+  --text-display-title-sm: 20px;
+  --text-display-title-sm--line-height: 28px;
+  --text-display-title-sm--letter-spacing: -0.02em;
+  --text-display-title-sm--font-weight: 700;
 
-    --border: 220 15% 22%;
-    --input: 220 15% 22%;
-    --ring: 0 85% 55%;
+  --text-display-title-xs: 18px;
+  --text-display-title-xs--line-height: 24px;
+  --text-display-title-xs--font-weight: 700;
 
-    /* Glassmorphism tokens - dark mode */
-    --glass-bg: 220 18% 16% / 0.5;
-    --glass-border: 220 15% 100% / 0.1;
-    --glass-shadow: 0 85% 55% / 0.3;
-    
-    /* Gradients - dark mode */
-    --gradient-start: 220 20% 8%;
-    --gradient-mid: 0 30% 12%;
-    --gradient-end: 220 20% 10%;
+  /* ---------- Spacing tokens used as bespoke units -------------------- */
+  --spacing-unit: 4px;
+  --spacing-stack-tight: 8px;
+  --spacing-stack: 12px;
+  --spacing-stack-comfortable: 16px;
+  --spacing-message-block: 12px;
+  --spacing-message-inline: 16px;
+  --spacing-glass-padding: 16px;
+  --spacing-page-padding: 24px;
+  --spacing-content-max-width: 896px;
 
-    --sidebar-background: 220 18% 12%;
-    --sidebar-foreground: 220 10% 90%;
-    --sidebar-primary: 0 85% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 220 10% 90%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 0 85% 55%;
-  }
+  /* ---------- Radius -------------------------------------------------- */
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
 }
 
+/* =====================================================================
+   Base styles
+   ===================================================================== */
 @layer base {
-  * {
-    border-color: hsl(var(--border));
+  html {
+    background-color: var(--color-background);
+    color: var(--color-on-background);
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
 
-  /* Force background colors for glassmorphism */
+/* =====================================================================
+   Utilities & animations
+   ===================================================================== */
+@layer utilities {
   .backdrop-blur-xl {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
+
+  .backdrop-blur-2xl {
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+  }
 }
 
-/* Custom animations */
-@keyframes slide-in {
+@keyframes fade-in {
   from {
-    transform: translateX(100%);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
     opacity: 1;
   }
 }
 
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out;
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
 }
 
 /* Custom scrollbar */
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
 }
-
 .scrollbar-thin::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: var(--color-glass-border);
   border-radius: 3px;
 }
-
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
-}
-
-/* Animation delays */
-.delay-100 {
-  animation-delay: 100ms;
-}
-
-.delay-200 {
-  animation-delay: 200ms;
-}
-
-.delay-1000 {
-  animation-delay: 1000ms;
-}
-
-/* Ensure backgrounds are visible */
-.bg-card\/40 {
-  background-color: hsla(var(--card) / 0.4) !important;
-}
-
-.bg-primary\/10 {
-  background-color: hsla(var(--primary) / 0.1) !important;
-}
-
-.bg-primary {
-  background-color: hsl(var(--primary)) !important;
-}
-
-.text-primary-foreground {
-  color: hsl(var(--primary-foreground)) !important;
-}
-
-.border-border\/50 {
-  border-color: hsla(var(--border) / 0.5) !important;
-}
-
-.border-primary\/20 {
-  border-color: hsla(var(--primary) / 0.2) !important;
+  background: var(--color-muted-foreground);
 }
