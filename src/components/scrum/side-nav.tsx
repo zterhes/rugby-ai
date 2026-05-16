@@ -7,8 +7,8 @@ import {
   MdDashboard,
   MdEventNote,
   MdGroup,
-  MdShare,
   MdSportsRugby,
+  MdImage,
 } from "react-icons/md";
 
 type NavItem = {
@@ -21,7 +21,7 @@ const NAV_PAGES: NavItem[] = [
   { href: "/dashboard", icon: MdDashboard, label: "Dashboard" },
   { href: "/roster", icon: MdGroup, label: "Roster" },
   { href: "/schedule", icon: MdEventNote, label: "Schedule" },
-  { href: "/assetLibrary", icon: MdShare, label: "Asset Library" },
+  { href: "/assetlab", icon: MdImage, label: "Asset Lab" },
 ];
 
 const TEAM_NAME = process.env.NEXT_PUBLIC_TEAM_NAME;
