@@ -1,5 +1,5 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 import { apiErrorSchema } from "@/lib/api/contracts/common";
 import {
   playerSchema,

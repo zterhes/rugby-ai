@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 
 export const nextMatchSchema = z.object({
   opponent: z.string(),

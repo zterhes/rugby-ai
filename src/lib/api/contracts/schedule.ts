@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 import { dateIsoSchema, listQuerySchema, paginationMetaSchema } from "@/lib/api/contracts/common";
 
 export const matchStatusSchema = z.enum(["Final", "Upcoming"]);

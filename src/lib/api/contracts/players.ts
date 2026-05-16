@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 import { listQuerySchema, paginationMetaSchema } from "@/lib/api/contracts/common";
 
 export const playerPositionSchema = z.enum([

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 
 export const rosterSummarySchema = z.object({
   totalPlayers: z.number().int().nonnegative(),

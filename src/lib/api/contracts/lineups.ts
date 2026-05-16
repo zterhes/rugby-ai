@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 import { scheduleMatchSchema } from "@/lib/api/contracts/schedule";
 
 export const pitchPositionSchema = z.number().int().min(1).max(23);

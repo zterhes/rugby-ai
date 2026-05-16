@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/api/zod-openapi";
 
 export const teamSchema = z.object({
   id: z.string(),
